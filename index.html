@@ -115,6 +115,17 @@
   .doc-link input:focus { outline: 2px solid var(--focus); outline-offset: 1px; }
   .doc-link a { font-size: 14px; font-weight: 500; white-space: nowrap; }
   .doc-link a[hidden] { display: none; }
+  .guide { margin-top: 12px; border: 1px solid var(--rule); border-radius: 6px; background: var(--surface); padding: 12px 16px 6px; }
+  .guide[hidden] { display: none; }
+  .guide-intro { margin: 0 0 8px; font-size: 13.5px; color: var(--muted); max-width: 80ch; }
+  .guide-rows { display: grid; grid-template-columns: minmax(150px, 1.1fr) minmax(200px, 2fr) minmax(160px, 1.3fr); gap: 0 18px; }
+  .guide-rows > div { padding: 8px 0; border-top: 1px solid var(--rule); font-size: 13px; }
+  .guide-rows .gh { font-family: "IBM Plex Mono", monospace; font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); border-top: 0; padding-top: 0; }
+  .guide-rows b { font-weight: 600; }
+  .guide-rows .feeds { color: var(--muted); font-size: 12.5px; display: block; margin-top: 2px; }
+  .term { display: inline-block; font-family: "IBM Plex Mono", monospace; font-size: 12px; background: var(--surface-2); border: 1px solid var(--rule); border-radius: 4px; padding: 2px 7px; margin: 2px 6px 2px 0; cursor: pointer; color: var(--ink); }
+  .term:hover, .term:focus-visible { border-color: var(--accent); outline: none; }
+  @media (max-width: 720px) { .guide-rows { grid-template-columns: 1fr; } .guide-rows .gh { display: none; } .guide-rows > div { border-top: 0; padding: 2px 0; } .guide-rows > div.sec { border-top: 1px solid var(--rule); padding-top: 10px; margin-top: 6px; } }
   .ipo-info { margin: 18px 0 0; padding: 14px 18px 12px; border: 1px solid var(--rule); border-left: 4px solid var(--accent); border-radius: 6px; background: var(--surface-2); }
   .ipo-info[hidden] { display: none; }
   .ipo-info-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; flex-wrap: wrap; }
@@ -233,7 +244,9 @@
   .fields h3:first-child { border-top: 0; padding-top: 0; margin-top: 0; }
   .field { display: flex; flex-direction: column; gap: 4px; }
   .field label { font-size: 12.5px; color: var(--ink); line-height: 1.3; }
-  .field small { font-family: "IBM Plex Mono", monospace; font-size: 10.5px; color: var(--muted); }
+  .field small { font-size: 12px; color: var(--muted); line-height: 1.7; }
+  .field small .where { display: block; font-family: "IBM Plex Mono", monospace; font-size: 10.5px; }
+  .field .term { font-size: 11px; padding: 1px 6px; margin: 0 4px 0 2px; }
   .field input {
     font: inherit; font-family: "IBM Plex Mono", monospace; font-size: 14px; padding: 7px 10px;
     border: 1px solid var(--rule); border-radius: 5px; background: var(--ground); color: var(--ink);
@@ -274,37 +287,30 @@
         <p class="lede">Twenty-one questions from the OWNERS framework. Answer each from the red herring prospectus, not from memory. Five are gates: a “No” on any of them ends the test. A “Don't know” anywhere sends you back to the document.</p>
       </div>
       <div class="ipo-name">
-        <label class="eyebrow" for="ipoSelect">IPO under review</label>
-        <select id="ipoSelect"><option value="">Loading IPO list…</option></select>
-        <input id="ipo" type="text" placeholder="Or type a company name" autocomplete="off">
+        <label class="eyebrow" for="ipo">IPO under review</label>
+        <input id="ipo" type="text" placeholder="Company name (optional)" autocomplete="off">
       </div>
     </div>
     <div class="doc-tools" id="docTools">
-      <span class="eyebrow">Three ways to get the figures</span>
+      <span class="eyebrow">How to get the figures</span>
       <ol class="ways">
-        <li><b>Pick an IPO from the list.</b> The calculator fills itself from figures compiled from the offer document, with page references.</li>
-        <li><b>Find the offer document yourself.</b>
+        <li><b>Find the offer document.</b>
           <a id="searchWeb" href="#" target="_blank" rel="noopener">Search the web for the RHP</a> ·
           <a href="https://www.sebi.gov.in/filings/public-issues.html" target="_blank" rel="noopener">SEBI filings</a> ·
           <a href="https://www.nseindia.com/market-data/all-upcoming-issues-ipo" target="_blank" rel="noopener">NSE IPOs</a> ·
           <a href="https://www.bseindia.com/publicissue.html" target="_blank" rel="noopener">BSE IPOs</a>.
           Use the RHP (red herring prospectus) if it exists; the DRHP is the earlier draft and its figures may be older.</li>
-        <li><b>Type the figures.</b> Paste the document link below so it stays with your answers, then fill the calculator from the pages it names.</li>
+        <li><b>Fill in the values.</b> Paste the document link below to keep it handy and open it. Under every box in the calculator is the heading to search for inside the PDF with Ctrl+F; click it to copy. The page does not read the document for you.</li>
       </ol>
       <div class="doc-link">
-        <input id="docUrl" type="url" placeholder="Paste the RHP or DRHP link (optional)" autocomplete="off">
+        <input id="docUrl" type="url" placeholder="Paste the RHP or DRHP link here to open it (the page does not read it)" autocomplete="off">
         <a id="docOpen" href="#" target="_blank" rel="noopener" hidden>Open document ↗</a>
+        <a id="guideToggle" href="#">Where to look in any RHP</a>
       </div>
-    </div>
-    <div class="ipo-info" id="ipoInfo" hidden>
-      <div class="ipo-info-head">
-        <div><span class="eyebrow">Figures pre-filled from the RHP</span><h3 id="infoName"></h3></div>
-        <a id="infoRhp" href="#" target="_blank" rel="noopener">Open the RHP ↗</a>
+      <div class="guide" id="guide" hidden>
+        <p class="guide-intro">Page numbers differ from one document to the next, so use the table of contents on the first pages, or press <b>Ctrl+F</b> (⌘F on a Mac) in the PDF and search for the heading. Click a search term to copy it. Printed page numbers usually run a few pages behind the PDF viewer's page counter.</p>
+        <div class="guide-rows" id="guideRows"></div>
       </div>
-      <p class="ipo-meta" id="infoMeta"></p>
-      <p class="ipo-pages" id="infoPages"></p>
-      <ul class="ipo-notes" id="infoNotes"></ul>
-      <p class="ipo-verify">These figures were typed by the author from the offer document and can contain errors. The calculator below is editable: check any number you rely on against the page cited.</p>
     </div>
   </div>
 </header>
@@ -318,7 +324,7 @@
         <span class="chev" aria-hidden="true"></span>
       </summary>
       <div class="calc-body">
-        <p class="calc-intro">Every figure below is in the RHP. Use the restated <b>consolidated</b> numbers and the <b>upper end</b> of the price band. If the RHP reports in ₹ million, divide by 10 to get ₹ crore. Leave blank anything you cannot find; the page computes whatever it can.</p>
+        <p class="calc-intro">Every figure below is in the RHP. Under each box is the heading to search for with <b>Ctrl+F</b> in the PDF (click it to copy) and the section it sits in. Use the restated <b>consolidated</b> numbers and the <b>upper end</b> of the price band. If the RHP reports in ₹ million, divide by 10 to get ₹ crore; if in ₹ lakh, divide by 100. Leave blank anything you cannot find; the page computes whatever it can.</p>
         <div class="fields" id="fields"></div>
         <div class="results" id="results"></div>
         <p class="assume" id="assume"></p>
@@ -500,7 +506,7 @@
   }
   function leaveExample(keepAnswers) {
     state.example = false;
-    if (!keepAnswers) { state.answers = Array(Q.length).fill(null); state.ipo = ''; state.ipoId = ''; ipoInput.value = ''; state.calc = {}; syncCalcInputs(); document.getElementById('ipoSelect').value = ''; document.getElementById('ipoInfo').hidden = true; }
+    if (!keepAnswers) { state.answers = Array(Q.length).fill(null); state.ipo = ''; state.ipoId = ''; ipoInput.value = ''; state.calc = {}; syncCalcInputs(); }
     banner.hidden = true;
     syncInputs(); save(); update(); renderResults();
   }
@@ -508,36 +514,48 @@
   /* ---------- Calculator ---------- */
   const FIELDS = [
     { h: 'The offer' },
-    { k: 'price', l: 'Upper price band', u: '₹ per share', src: 'Price band advertisement' },
-    { k: 'preShares', l: 'Pre-issue shares outstanding', u: 'crore shares', src: 'Capital Structure' },
-    { k: 'fresh', l: 'Fresh issue size', u: '₹ crore', src: 'Objects of the Offer' },
-    { k: 'freshShares', l: 'Fresh issue, number of new shares (if the amount is not yet known)', u: 'crore shares', src: 'The Issue' },
-    { k: 'ofs', l: 'Offer for sale size', u: '₹ crore', src: 'Summary of the Offer' },
-    { k: 'debtRepay', l: 'Fresh proceeds for debt repayment', u: '₹ crore', src: 'Objects of the Offer' },
-    { k: 'gcp', l: 'General corporate purposes + unidentified acquisitions', u: '₹ crore', src: 'Objects of the Offer' },
+    { k: 'price', l: 'Upper end of the price band', u: '₹ per share', where: 'cover page or price band advertisement', terms: ['Price Band', 'Cap Price'] },
+    { k: 'preShares', l: 'Shares outstanding before the issue', u: 'crore shares', where: 'The Offer', terms: ['outstanding prior to the Offer', 'CAPITAL STRUCTURE'] },
+    { k: 'fresh', l: 'Fresh issue size', u: '₹ crore', where: 'The Offer, Objects of the Offer', terms: ['Fresh Issue', 'OBJECTS OF THE OFFER'] },
+    { k: 'freshShares', l: 'Fresh issue, number of new shares (only if the amount is not yet known)', u: 'crore shares', where: 'The Offer', terms: ['Fresh Issue of up to'] },
+    { k: 'ofs', l: 'Offer for sale size', u: '₹ crore', where: 'The Offer', terms: ['Offer for Sale', 'Offered Shares'] },
+    { k: 'debtRepay', l: 'Fresh proceeds used to repay debt', u: '₹ crore', where: 'Objects of the Offer', terms: ['repayment', 'pre-payment of certain borrowings'] },
+    { k: 'gcp', l: 'General corporate purposes + unidentified acquisitions', u: '₹ crore', where: 'Objects of the Offer', terms: ['General Corporate Purposes', 'inorganic growth'] },
     { h: 'Latest full year, restated consolidated' },
-    { k: 'rev', l: 'Revenue from operations', u: '₹ crore', src: 'Restated P&L' },
-    { k: 'ebitda', l: 'EBITDA', u: '₹ crore', src: 'Basis for Offer Price (KPIs)' },
-    { k: 'pat', l: 'Profit after tax', u: '₹ crore', src: 'Restated P&L' },
-    { k: 'interest', l: 'Finance costs', u: '₹ crore', src: 'Restated P&L' },
-    { k: 'networth', l: 'Net worth (total equity)', u: '₹ crore', src: 'Restated Balance Sheet' },
-    { k: 'debt', l: 'Gross borrowings', u: '₹ crore', src: 'Restated Balance Sheet' },
-    { k: 'cash', l: 'Cash and bank balances', u: '₹ crore', src: 'Restated Balance Sheet' },
-    { k: 'recv', l: 'Trade receivables, latest', u: '₹ crore', src: 'Restated Balance Sheet' },
+    { k: 'rev', l: 'Revenue from operations', u: '₹ crore', where: 'Restated Statement of Profit and Loss', terms: ['Revenue from operations'] },
+    { k: 'ebitda', l: 'EBITDA', u: '₹ crore', where: 'Basis for Offer Price, key performance indicators', terms: ['EBITDA', 'Key Performance Indicators'] },
+    { k: 'pat', l: 'Profit after tax', u: '₹ crore', where: 'Restated Statement of Profit and Loss', terms: ['Profit for the year', 'Profit after tax'] },
+    { k: 'interest', l: 'Finance costs', u: '₹ crore', where: 'Restated Statement of Profit and Loss', terms: ['Finance costs'] },
+    { k: 'networth', l: 'Net worth (total equity)', u: '₹ crore', where: 'Restated Balance Sheet', terms: ['Total equity', 'Net worth'] },
+    { k: 'debt', l: 'Gross borrowings', u: '₹ crore', where: 'Restated Balance Sheet, Financial Indebtedness', terms: ['Total borrowings', 'FINANCIAL INDEBTEDNESS'] },
+    { k: 'cash', l: 'Cash and bank balances', u: '₹ crore', where: 'Restated Balance Sheet', terms: ['Cash and cash equivalents', 'Bank balances'] },
+    { k: 'recv', l: 'Trade receivables, latest year', u: '₹ crore', where: 'Restated Balance Sheet', terms: ['Trade receivables'] },
     { h: 'Trend and cash conversion' },
-    { k: 'recvPrev', l: 'Trade receivables, prior year', u: '₹ crore', src: 'Restated Balance Sheet' },
-    { k: 'revPrev', l: 'Revenue, prior year', u: '₹ crore', src: 'Restated P&L' },
-    { k: 'ocf3', l: 'Operating cash flow, three years added', u: '₹ crore', src: 'Restated Cash Flow Statement' },
-    { k: 'pat3', l: 'Profit after tax, three years added', u: '₹ crore', src: 'Restated P&L' },
-    { k: 'tax', l: 'Tax rate for interest saving', u: '%', src: 'default 25' },
+    { k: 'recvPrev', l: 'Trade receivables, prior year', u: '₹ crore', where: 'Restated Balance Sheet, previous year column', terms: ['Trade receivables'] },
+    { k: 'revPrev', l: 'Revenue from operations, prior year', u: '₹ crore', where: 'Restated Statement of Profit and Loss, previous year column', terms: ['Revenue from operations'] },
+    { k: 'ocf3', l: 'Operating cash flow, three years added together', u: '₹ crore', where: 'Restated Statement of Cash Flows', terms: ['Net cash generated from operating activities', 'Statement of Cash Flows'] },
+    { k: 'pat3', l: 'Profit after tax, three years added together', u: '₹ crore', where: 'Restated Statement of Profit and Loss', terms: ['Profit for the year'] },
+    { k: 'tax', l: 'Tax rate used for the interest saving', u: '%', where: 'Restated Statement of Profit and Loss; leave blank for 25%', terms: ['Total tax expense'] },
   ];
+  function termChips(terms) {
+    return terms.map(function (t) { return '<span class="term" role="button" tabindex="0" title="Click to copy" data-term="' + t.replace(/"/g, '&quot;') + '">' + t + '</span>'; }).join('');
+  }
+  function copyTerm(t) {
+    const s = t.dataset.term; const done = function () { const old = t.textContent; t.textContent = 'Copied'; setTimeout(function(){ t.textContent = old; }, 1200); };
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(s).then(done, function(){ fallback(s, done); }); else fallback(s, done);
+  }
+  function wireTerms(container) {
+    container.addEventListener('click', function (e) { const t = e.target.closest('.term'); if (t) copyTerm(t); });
+    container.addEventListener('keydown', function (e) { if ((e.key === 'Enter' || e.key === ' ') && e.target.classList.contains('term')) { e.preventDefault(); copyTerm(e.target); } });
+  }
   const fieldsEl = document.getElementById('fields');
   fieldsEl.innerHTML = FIELDS.map(function (f) {
     if (f.h) return '<h3>' + f.h + '</h3>';
     return '<div class="field"><label for="c_' + f.k + '">' + f.l + '</label>' +
       '<input id="c_' + f.k + '" type="number" inputmode="decimal" step="any" data-k="' + f.k + '" placeholder="' + f.u + '">' +
-      '<small>' + f.src + '</small></div>';
+      '<small>Search the RHP for ' + termChips(f.terms) + '<span class="where">in ' + f.where + '</span></small></div>';
   }).join('');
+  wireTerms(fieldsEl);
   function syncCalcInputs() {
     FIELDS.forEach(function (f) { if (!f.k) return; const el = document.getElementById('c_' + f.k); const v = state.calc[f.k]; el.value = (v === undefined || v === null || v === '') ? '' : v; });
   }
@@ -760,69 +778,9 @@
   });
   ipoInput.addEventListener('input', function () {
     if (state.example) leaveExample(true);
-    state.ipo = ipoInput.value; state.ipoId = ''; document.getElementById('ipoSelect').value = ''; document.getElementById('ipoInfo').hidden = true; save();
+    state.ipo = ipoInput.value; save();
   });
 
-  /* ---------- Curated IPO list (ipos.json next to this page) ---------- */
-  // No entries are embedded in the page. The list comes only from ipos.json next to it.
-  const EMBEDDED_LIST = { updated: '', ipos: [] };
-  let LIST = EMBEDDED_LIST;
-  const sel = document.getElementById('ipoSelect');
-
-  function labelFor(e) {
-    const st = e.status === 'example' ? 'example' : e.status === 'open' ? 'open now' : e.status === 'closed' ? 'closed' : e.open ? 'opens ' + e.open : 'upcoming';
-    return e.name + ' · ' + st;
-  }
-  function fillSelect() {
-    const groups = { open: [], upcoming: [], closed: [], example: [] };
-    LIST.ipos.forEach(function (e) { (groups[e.status] || groups.upcoming).push(e); });
-    let html = '<option value="">Choose an IPO, or type a name</option>';
-    [['open', 'Open now'], ['upcoming', 'Upcoming'], ['closed', 'Recently closed'], ['example', 'Worked example']].forEach(function (g) {
-      if (!groups[g[0]].length) return;
-      html += '<optgroup label="' + g[1] + '">' + groups[g[0]].map(function (e) { return '<option value="' + e.id + '">' + labelFor(e) + '</option>'; }).join('') + '</optgroup>';
-    });
-    sel.innerHTML = html;
-    if (state.ipoId) sel.value = state.ipoId;
-    if (state.ipoId && !sel.value) state.ipoId = '';
-  }
-  function showInfo(e) {
-    const box = document.getElementById('ipoInfo');
-    if (!e) { box.hidden = true; return; }
-    document.getElementById('infoName').textContent = e.name;
-    const a = document.getElementById('infoRhp');
-    if (e.rhp && e.rhp.url) { a.href = e.rhp.url; a.hidden = false; } else { a.hidden = true; }
-    const meta = [];
-    if (e.priceBand && e.priceBand.length) meta.push('Price band ₹' + e.priceBand.join('–' + '₹'));
-    if (e.lot) meta.push('lot ' + e.lot + ' shares');
-    if (e.open || e.close) meta.push('issue ' + (e.open || '?') + ' to ' + (e.close || '?'));
-    if (e.regulation) meta.push('Regulation ' + e.regulation + (e.regulation.indexOf('6(2)') === 0 ? ' (retail portion 10%)' : ''));
-    if (e.rhp && e.rhp.date) meta.push('RHP ' + e.rhp.date);
-    if (e.structural) {
-      const s = e.structural;
-      if (s.promoterPre !== undefined) meta.push('promoters ' + s.promoterPre + '% → ' + s.promoterPost + '% post-issue');
-      if (s.sellers) meta.push('sellers: ' + s.sellers);
-      if (s.pledge) meta.push('pledge: ' + s.pledge);
-    }
-    meta.push('compiled ' + (e.compiled || LIST.updated));
-    document.getElementById('infoMeta').textContent = meta.join(' · ');
-    const pg = e.pages || {};
-    document.getElementById('infoPages').innerHTML = Object.keys(pg).length
-      ? '<b>Where to look in the RHP:</b> ' + Object.keys(pg).map(function (k) { return k + ' <b>p.' + pg[k] + '</b>'; }).join(' · ') : '';
-    document.getElementById('infoNotes').innerHTML = (e.notes || []).map(function (n) { return '<li>' + n + '</li>'; }).join('');
-    box.hidden = false;
-  }
-  function applyEntry(id) {
-    const e = LIST.ipos.filter(function (x) { return x.id === id; })[0];
-    state.ipoId = id;
-    if (!e) { showInfo(null); save(); return; }
-    if (state.example) { state.example = false; banner.hidden = true; }
-    state.ipo = e.name; ipoInput.value = e.name;
-    state.calc = Object.assign({}, e.figures || {});
-    syncCalcInputs(); renderResults(); showInfo(e); save();
-    document.getElementById('calc').open = true;
-    document.getElementById('suggest').click();
-  }
-  sel.addEventListener('change', function () { applyEntry(sel.value); });
 
   /* Document tools: web search from the typed name, and a remembered RHP link */
   const docUrl = document.getElementById('docUrl'), docOpen = document.getElementById('docOpen'), searchWeb = document.getElementById('searchWeb');
@@ -833,21 +791,34 @@
     const u = (state.docUrl || '').trim();
     if (/^https?:\/\//i.test(u)) { docOpen.href = u; docOpen.hidden = false; } else { docOpen.hidden = true; }
   }
-  docUrl.addEventListener('input', function () { if (state.example) { state.example = false; banner.hidden = true; } state.docUrl = docUrl.value; save(); refreshDocTools(); });
-  ipoInput.addEventListener('input', refreshDocTools);
+  docUrl.addEventListener('input', function () {
+    if (state.example) { state.example = false; banner.hidden = true; }
+    state.docUrl = docUrl.value; save(); refreshDocTools();
+    if (/^https?:\/\//i.test(docUrl.value.trim())) document.getElementById('guide').hidden = false;
+  });
 
-  function loadList() {
-    fillSelect();
-    if (location.protocol !== 'http:' && location.protocol !== 'https:') return;
-    fetch('ipos.json', { cache: 'no-cache' }).then(function (r) { return r.ok ? r.json() : null; }).then(function (j) {
-      if (!j || !Array.isArray(j.ipos)) return;
-      const ids = {}; j.ipos.forEach(function (e) { ids[e.id] = true; });
-      const merged = j.ipos.slice(); EMBEDDED_LIST.ipos.forEach(function (e) { if (!ids[e.id]) merged.push(e); });
-      LIST = { updated: j.updated || EMBEDDED_LIST.updated, ipos: merged };
-      fillSelect();
-      if (state.ipoId) { const e = LIST.ipos.filter(function (x) { return x.id === state.ipoId; })[0]; if (e) showInfo(e); }
-    }).catch(function () {});
-  }
+  /* Where to look in any RHP: the headings are standard even though page numbers are not */
+  const GUIDE = [
+    ['Summary of the Offer Document', 'Issue structure, promoter holdings before and after, summary financials, litigation and related-party summaries. Read first.', 'Questions 5, 7, 13, 14', ['SUMMARY OF THE OFFER DOCUMENT']],
+    ['The Offer', 'Number of shares before and after the issue, fresh versus offer for sale, allocation to QIB, NII and retail.', 'Pre-issue shares, fresh issue, OFS', ['THE OFFER', 'outstanding after the Offer']],
+    ['Capital Structure', 'Shareholding of promoters and top shareholders, lock-in, pledged shares, price at which shares were issued in the last year.', 'Question 15, promoter holding', ['CAPITAL STRUCTURE', 'pledge']],
+    ['Objects of the Offer', 'Where fresh-issue money goes: debt repayment, capex, working capital, general corporate purposes.', 'Debt repayment, GCP, questions 5 and 6', ['OBJECTS OF THE OFFER', 'General Corporate Purposes']],
+    ['Basis for Offer Price', 'EPS, P/E, return on net worth, key performance indicators including EBITDA, peer table, weighted average cost of acquisition.', 'EBITDA, questions 16, 18, 20', ['BASIS FOR OFFER PRICE', 'Weighted average cost of acquisition', 'Key Performance Indicators']],
+    ['Risk Factors', 'Ordered by materiality. Customer and supplier concentration, negative cash flows, litigation, dependence on a few products or places.', 'Questions 3, 4, 17', ['RISK FACTORS', 'top ten customers', 'negative cash flow']],
+    ['Restated Financial Information', 'Three years of profit and loss, balance sheet and cash flow, plus notes. Use the consolidated statements where both exist.', 'Revenue, PAT, finance costs, net worth, borrowings, cash, receivables, OCF', ['Restated Consolidated Statement of Profit and Loss', 'Statement of Cash Flows', 'Trade receivables', 'Contingent liabilities']],
+    ['Related Party Transactions', 'A note inside the financial statements, and a chapter summarising it: sales, purchases, loans and balances with promoter entities.', 'Question 14', ['RELATED PARTY TRANSACTIONS', 'Related Party']],
+    ['Financial Indebtedness', 'Each loan, its lender, rate and security. Confirms which loans the proceeds will repay.', 'Interest rate on debt to be repaid, question 12', ['FINANCIAL INDEBTEDNESS']],
+    ['Outstanding Litigation and Material Developments', 'Cases by, and against, the company, promoters, directors and group companies, with amounts.', 'Question 13', ['OUTSTANDING LITIGATION']],
+    ['Our Promoters and Promoter Group / Our Management', 'Background of promoters and directors, other companies they run, past regulatory actions.', 'Questions 1, 13, 15', ['OUR PROMOTERS', 'OUR MANAGEMENT']],
+  ];
+  const guideRows = document.getElementById('guideRows');
+  guideRows.innerHTML = '<div class="gh">Section heading</div><div class="gh">What it holds</div><div class="gh">Search for (click to copy)</div>' + GUIDE.map(function (g) {
+    return '<div class="sec"><b>' + g[0] + '</b></div><div>' + g[1] + '<span class="feeds">Feeds: ' + g[2] + '</span></div><div>' +
+      termChips(g[3]) + '</div>';
+  }).join('');
+  wireTerms(guideRows);
+  document.getElementById('guideToggle').addEventListener('click', function (e) { e.preventDefault(); const g = document.getElementById('guide'); g.hidden = !g.hidden; });
+  ipoInput.addEventListener('input', refreshDocTools);
 
   load();
   render();
@@ -856,9 +827,7 @@
   syncCalcInputs();
   renderResults();
   update();
-  loadList();
   docUrl.value = state.docUrl || '';
   refreshDocTools();
-  if (state.ipoId) { const e0 = LIST.ipos.filter(function (x) { return x.id === state.ipoId; })[0]; if (e0) showInfo(e0); }
 })();
 </script>
