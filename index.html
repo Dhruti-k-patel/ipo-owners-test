@@ -1,0 +1,740 @@
+<title>IPO Owner's Test</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Serif:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+  :root {
+    --ground: #F3F6F4;
+    --surface: #FFFFFF;
+    --surface-2: #EAF0ED;
+    --ink: #172220;
+    --muted: #5B6B67;
+    --rule: #D3DCD8;
+    --accent: #0F6E5D;
+    --accent-ink: #FFFFFF;
+    --gate: #8B3A3A;
+    --gate-bg: #F6E9E9;
+    --pass: #A33A3A;
+    --pass-bg: #F7E8E8;
+    --investigate: #A6690C;
+    --investigate-bg: #FBF0DC;
+    --ready: #1F7A4D;
+    --ready-bg: #E3F2E9;
+    --focus: #0F6E5D;
+    --shadow: 0 1px 2px rgba(23,34,32,.06), 0 8px 24px rgba(23,34,32,.06);
+    color-scheme: light;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --ground: #101614;
+      --surface: #182120;
+      --surface-2: #1F2B29;
+      --ink: #E6ECE9;
+      --muted: #9AA9A4;
+      --rule: #2C3A37;
+      --accent: #52BFA6;
+      --accent-ink: #0F1A17;
+      --gate: #E08A8A;
+      --gate-bg: #3A2323;
+      --pass: #E07A7A;
+      --pass-bg: #3A2323;
+      --investigate: #E3A94A;
+      --investigate-bg: #3A2E18;
+      --ready: #5CC48A;
+      --ready-bg: #1B3327;
+      --focus: #52BFA6;
+      --shadow: 0 1px 2px rgba(0,0,0,.4), 0 8px 24px rgba(0,0,0,.35);
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --ground: #101614;
+    --surface: #182120;
+    --surface-2: #1F2B29;
+    --ink: #E6ECE9;
+    --muted: #9AA9A4;
+    --rule: #2C3A37;
+    --accent: #52BFA6;
+    --accent-ink: #0F1A17;
+    --gate: #E08A8A;
+    --gate-bg: #3A2323;
+    --pass: #E07A7A;
+    --pass-bg: #3A2323;
+    --investigate: #E3A94A;
+    --investigate-bg: #3A2E18;
+    --ready: #5CC48A;
+    --ready-bg: #1B3327;
+    --focus: #52BFA6;
+    --shadow: 0 1px 2px rgba(0,0,0,.4), 0 8px 24px rgba(0,0,0,.35);
+    color-scheme: dark;
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--ground);
+    color: var(--ink);
+    font-family: "IBM Plex Sans", "Segoe UI", Roboto, system-ui, sans-serif;
+    font-size: 15px;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+  }
+  h1, h2, h3 { font-family: "IBM Plex Serif", Georgia, "Times New Roman", serif; margin: 0; text-wrap: balance; }
+  .mono { font-family: "IBM Plex Mono", "Consolas", "Courier New", monospace; }
+  .eyebrow { font-family: "IBM Plex Mono", monospace; font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+  a { color: var(--accent); }
+
+  header.top {
+    border-bottom: 1px solid var(--rule);
+    background: var(--surface);
+  }
+  .wrap { max-width: 1120px; margin: 0 auto; padding: 0 20px; }
+  .top-inner { display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; padding: 28px 0 22px; flex-wrap: wrap; }
+  .top h1 { font-size: 30px; font-weight: 600; line-height: 1.15; }
+  .top p.lede { margin: 8px 0 0; max-width: 62ch; color: var(--muted); }
+  .ipo-name { display: flex; flex-direction: column; gap: 6px; min-width: 260px; }
+  .ipo-name input {
+    font: inherit; font-size: 15px; padding: 9px 12px;
+    border: 1px solid var(--rule); border-radius: 6px;
+    background: var(--ground); color: var(--ink);
+  }
+  .ipo-name input:focus { outline: 2px solid var(--focus); outline-offset: 1px; }
+
+  .example-banner {
+    display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap;
+    margin: 20px 0 0; padding: 10px 14px;
+    background: var(--investigate-bg); border: 1px solid var(--rule); border-radius: 6px;
+    font-size: 14px;
+  }
+  .example-banner[hidden] { display: none; }
+
+  main.grid {
+    display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: 32px;
+    padding: 24px 0 64px; align-items: start;
+  }
+
+  /* Question column */
+  .block { margin-top: 28px; }
+  .block:first-child { margin-top: 0; }
+  .block-head { display: grid; grid-template-columns: 44px 1fr; gap: 14px; align-items: baseline; padding-bottom: 10px; border-bottom: 2px solid var(--ink); }
+  .block-letter { font-family: "IBM Plex Serif", serif; font-size: 34px; font-weight: 600; line-height: 1; color: var(--accent); }
+  .block-head h2 { font-size: 19px; font-weight: 600; }
+  .block-head .eyebrow { display: block; margin-top: 2px; }
+
+  .q {
+    display: grid; grid-template-columns: 44px 1fr; gap: 14px;
+    padding: 18px 0; border-bottom: 1px solid var(--rule);
+  }
+  .q-num { font-family: "IBM Plex Mono", monospace; font-size: 13px; color: var(--muted); padding-top: 3px; font-variant-numeric: tabular-nums; }
+  .q-text { font-size: 16px; font-weight: 500; line-height: 1.4; margin: 0; }
+  .gate-tag {
+    display: inline-block; vertical-align: 2px; margin-left: 8px;
+    font-family: "IBM Plex Mono", monospace; font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase;
+    color: var(--gate); background: var(--gate-bg); border: 1px solid currentColor;
+    padding: 1px 6px; border-radius: 3px;
+  }
+  .q-why { margin: 6px 0 0; color: var(--muted); font-size: 14px; max-width: 66ch; }
+  .q-where { margin: 6px 0 0; font-family: "IBM Plex Mono", monospace; font-size: 12.5px; color: var(--muted); }
+  .q-where b { color: var(--ink); font-weight: 500; }
+
+  .answers { display: inline-flex; margin-top: 12px; border: 1px solid var(--rule); border-radius: 6px; overflow: hidden; background: var(--surface); }
+  .answers label { position: relative; }
+  .answers input { position: absolute; opacity: 0; inset: 0; margin: 0; }
+  .answers span {
+    display: inline-block; padding: 7px 14px; font-size: 14px; font-weight: 500; cursor: pointer;
+    border-right: 1px solid var(--rule); color: var(--ink); user-select: none;
+  }
+  .answers label:last-child span { border-right: 0; }
+  .answers input:checked + span { background: var(--ink); color: var(--surface); }
+  .answers input:checked[value="no"] + span { background: var(--pass); color: #fff; }
+  .answers input:checked[value="dk"] + span { background: var(--investigate); color: #fff; }
+  .answers input:checked[value="yes"] + span { background: var(--ready); color: #fff; }
+  .answers input:focus-visible + span { outline: 2px solid var(--focus); outline-offset: -2px; }
+
+  /* Verdict aside */
+  aside.verdict {
+    position: sticky; top: 16px;
+    background: var(--surface); border: 1px solid var(--rule); border-radius: 8px;
+    box-shadow: var(--shadow);
+    display: flex; flex-direction: column;
+  }
+  .v-head { padding: 16px 18px 12px; border-bottom: 1px solid var(--rule); }
+  .progress { height: 6px; background: var(--surface-2); border-radius: 3px; overflow: hidden; margin-top: 8px; }
+  .progress i { display: block; height: 100%; width: 0; background: var(--accent); transition: width .25s ease; }
+  .v-count { display: flex; justify-content: space-between; font-family: "IBM Plex Mono", monospace; font-size: 12px; color: var(--muted); margin-top: 6px; font-variant-numeric: tabular-nums; }
+
+  .outcome { padding: 18px; border-bottom: 1px solid var(--rule); }
+  .outcome .eyebrow { margin-bottom: 6px; }
+  .outcome h2 { font-size: 24px; font-weight: 600; line-height: 1.15; }
+  .outcome p { margin: 8px 0 0; font-size: 14px; color: var(--muted); }
+  .outcome[data-state="pass"] { background: var(--pass-bg); }
+  .outcome[data-state="pass"] h2 { color: var(--pass); }
+  .outcome[data-state="investigate"] { background: var(--investigate-bg); }
+  .outcome[data-state="investigate"] h2 { color: var(--investigate); }
+  .outcome[data-state="ready"] { background: var(--ready-bg); }
+  .outcome[data-state="ready"] h2 { color: var(--ready); }
+
+  .gates { padding: 14px 18px; border-bottom: 1px solid var(--rule); }
+  .gates ul { list-style: none; margin: 8px 0 0; padding: 0; display: grid; gap: 6px; }
+  .gates li { display: grid; grid-template-columns: 18px 1fr; gap: 8px; font-size: 13px; align-items: start; }
+  .dot { width: 10px; height: 10px; border-radius: 50%; margin-top: 5px; border: 1.5px solid var(--muted); }
+  .dot.yes { background: var(--ready); border-color: var(--ready); }
+  .dot.no { background: var(--pass); border-color: var(--pass); }
+  .dot.dk { background: var(--investigate); border-color: var(--investigate); }
+
+  .next { padding: 14px 18px; border-bottom: 1px solid var(--rule); }
+  .next ul { margin: 8px 0 0; padding: 0 0 0 18px; font-size: 13.5px; display: grid; gap: 6px; }
+  .next li b { font-family: "IBM Plex Mono", monospace; font-weight: 500; font-size: 12.5px; }
+  .next .empty { font-size: 13.5px; color: var(--muted); margin: 6px 0 0; }
+
+  .actions { padding: 14px 18px; display: flex; gap: 8px; flex-wrap: wrap; }
+  button {
+    font: inherit; font-size: 14px; font-weight: 500; padding: 8px 14px; border-radius: 6px; cursor: pointer;
+    border: 1px solid var(--rule); background: var(--surface); color: var(--ink);
+  }
+  button.primary { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+  button:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+  .toast { font-size: 12.5px; color: var(--muted); padding: 0 18px 14px; min-height: 18px; }
+
+  /* Calculator */
+  details.calc { border: 1px solid var(--rule); border-radius: 8px; background: var(--surface); margin-bottom: 28px; }
+  details.calc summary { cursor: pointer; padding: 14px 18px; list-style: none; display: grid; grid-template-columns: 44px 1fr auto; gap: 14px; align-items: center; }
+  details.calc summary::-webkit-details-marker { display: none; }
+  details.calc summary .block-letter { font-size: 26px; }
+  details.calc summary h2 { font-size: 18px; font-weight: 600; }
+  details.calc summary .eyebrow { display: block; margin-top: 2px; }
+  details.calc summary .chev { font-family: "IBM Plex Mono", monospace; font-size: 12px; color: var(--muted); }
+  details.calc[open] summary .chev::before { content: "Hide"; }
+  details.calc:not([open]) summary .chev::before { content: "Open"; }
+  .calc-body { border-top: 1px solid var(--rule); padding: 16px 18px 18px; }
+  .calc-intro { margin: 0 0 14px; font-size: 14px; color: var(--muted); max-width: 70ch; }
+  .fields { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 10px 14px; }
+  .fields h3 { grid-column: 1 / -1; font-family: "IBM Plex Mono", monospace; font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); font-weight: 500; margin: 8px 0 0; padding-top: 8px; border-top: 1px solid var(--rule); }
+  .fields h3:first-child { border-top: 0; padding-top: 0; margin-top: 0; }
+  .field { display: flex; flex-direction: column; gap: 4px; }
+  .field label { font-size: 12.5px; color: var(--ink); line-height: 1.3; }
+  .field small { font-family: "IBM Plex Mono", monospace; font-size: 10.5px; color: var(--muted); }
+  .field input {
+    font: inherit; font-family: "IBM Plex Mono", monospace; font-size: 14px; padding: 7px 10px;
+    border: 1px solid var(--rule); border-radius: 5px; background: var(--ground); color: var(--ink);
+    font-variant-numeric: tabular-nums;
+  }
+  .field input:focus { outline: 2px solid var(--focus); outline-offset: 1px; }
+  .results { margin-top: 18px; display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 0 28px; }
+  .results h3 { grid-column: 1 / -1; font-family: "IBM Plex Mono", monospace; font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); font-weight: 500; margin: 14px 0 4px; }
+  .results h3:first-child { margin-top: 0; }
+  .row { display: flex; justify-content: space-between; gap: 12px; padding: 6px 0; border-bottom: 1px dotted var(--rule); font-size: 13.5px; }
+  .row span:last-child { font-family: "IBM Plex Mono", monospace; font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .row.dim span:last-child { color: var(--muted); }
+  .assume { margin: 14px 0 0; font-size: 12.5px; color: var(--muted); max-width: 72ch; }
+  .calc-actions { margin-top: 14px; display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+  .sugg-tag { display: inline-block; margin-left: 8px; font-family: "IBM Plex Mono", monospace; font-size: 10.5px; letter-spacing: .06em; text-transform: uppercase; color: var(--accent); border: 1px solid currentColor; padding: 1px 6px; border-radius: 3px; vertical-align: 2px; }
+
+  footer.note { border-top: 1px solid var(--rule); padding: 18px 0 40px; font-size: 13px; color: var(--muted); max-width: 72ch; }
+
+  @media (max-width: 880px) {
+    main.grid { grid-template-columns: 1fr; }
+    aside.verdict { position: static; order: -1; }
+    .top h1 { font-size: 26px; }
+  }
+  @media (prefers-reduced-motion: reduce) { .progress i { transition: none; } }
+  @media print {
+    aside.verdict { position: static; box-shadow: none; }
+    .actions, .example-banner, .toast { display: none !important; }
+    body { background: #fff; color: #000; }
+  }
+</style>
+
+<header class="top">
+  <div class="wrap">
+    <div class="top-inner">
+      <div>
+        <span class="eyebrow">Companion to “The IPO Question Nobody Asks”</span>
+        <h1>IPO Owner's Test</h1>
+        <p class="lede">Twenty-one questions from the OWNERS framework. Answer each from the red herring prospectus, not from memory. Five are gates: a “No” on any of them ends the test. A “Don't know” anywhere sends you back to the document.</p>
+      </div>
+      <div class="ipo-name">
+        <label class="eyebrow" for="ipo">IPO under review</label>
+        <input id="ipo" type="text" placeholder="Company name (optional)" autocomplete="off">
+      </div>
+    </div>
+    <div class="example-banner" id="exampleBanner">
+      <span><b>Example answers loaded</b> for a hypothetical manufacturing IPO, to show how the routing works. They are not about any real company.</span>
+      <button type="button" id="clearExample">Clear and start my own</button>
+    </div>
+  </div>
+</header>
+
+<main class="wrap grid">
+  <div>
+    <details class="calc" id="calc" open>
+      <summary>
+        <span class="block-letter">₹</span>
+        <div><h2>Run the numbers</h2><span class="eyebrow">Optional · type figures from the RHP in ₹ crore · the page computes the ratios and suggests answers for questions 5, 6, 9, 10, 12 and 19</span></div>
+        <span class="chev" aria-hidden="true"></span>
+      </summary>
+      <div class="calc-body">
+        <p class="calc-intro">Every figure below is in the RHP. Use the restated <b>consolidated</b> numbers and the <b>upper end</b> of the price band. If the RHP reports in ₹ million, divide by 10 to get ₹ crore. Leave blank anything you cannot find; the page computes whatever it can.</p>
+        <div class="fields" id="fields"></div>
+        <div class="results" id="results"></div>
+        <p class="assume" id="assume"></p>
+        <div class="calc-actions">
+          <button type="button" class="primary" id="suggest">Suggest answers from these numbers</button>
+          <button type="button" id="clearCalc">Clear figures</button>
+          <span class="toast" id="calcToast" style="padding:0"></span>
+        </div>
+      </div>
+    </details>
+    <section id="form" aria-label="Questions"></section>
+  </div>
+
+  <aside class="verdict" aria-live="polite">
+    <div class="v-head">
+      <span class="eyebrow">Progress</span>
+      <div class="progress"><i id="bar"></i></div>
+      <div class="v-count"><span id="answered">0 of 21 answered</span><span id="gatesOk">gates 0/5</span></div>
+    </div>
+    <div class="outcome" id="outcome" data-state="none">
+      <span class="eyebrow" id="outcomeLabel">Outcome</span>
+      <h2 id="outcomeTitle">Not enough answers yet</h2>
+      <p id="outcomeText">Work through the questions with the RHP open. The verdict updates as you go and is provisional until all 21 are answered.</p>
+    </div>
+    <div class="gates">
+      <span class="eyebrow">The five gates</span>
+      <ul id="gateList"></ul>
+    </div>
+    <div class="next">
+      <span class="eyebrow" id="nextLabel">Read next</span>
+      <ul id="nextList"></ul>
+      <p class="empty" id="nextEmpty">Nothing outstanding.</p>
+    </div>
+    <div class="actions">
+      <button type="button" class="primary" id="copy">Copy summary</button>
+      <button type="button" id="reset">Reset</button>
+      <a href="IPO-Owners-Test-Scorecard.pdf" style="align-self:center;font-size:14px" download>Printable scorecard (PDF)</a>
+    </div>
+    <div class="toast" id="toast"></div>
+  </aside>
+</main>
+
+<footer class="note">
+  <div class="wrap">
+    This tool is for educational purposes only. It does not constitute investment advice or a recommendation to apply for, buy or sell any security. “Ready to decide” means you have done the work; the decision, and its consequences, are yours. Consult a SEBI-registered investment adviser where appropriate. Your answers are saved only in this browser.
+  </div>
+</footer>
+
+<script>
+(function () {
+  const BLOCKS = [
+    { key: 'O', title: 'Operations', sub: 'Understand the business' },
+    { key: 'W', title: 'Why the money', sub: 'Fresh issue, offer for sale, use of proceeds' },
+    { key: 'N', title: 'Numbers and cash', sub: 'Financial quality and cash conversion' },
+    { key: 'E', title: 'Executives and promoters', sub: 'Whom you are partnering with' },
+    { key: 'R', title: 'Risks and rivals', sub: 'Risk factors and peer comparison' },
+    { key: 'S', title: 'Sticker price', sub: 'Valuation and the ownership question' },
+  ];
+
+  const Q = [
+    { b:'O', gate:true,  text:'Can I explain, in my own words, what the company sells, to whom, and why customers stay?',
+      why:'If you cannot describe the business without the company’s own phrases, you cannot value it.',
+      where:'Summary of the Offer Document · Our Business' },
+    { b:'O', text:'Is the industry growing, and is the company holding or gaining share within it?',
+      why:'The industry chapter is commissioned by the company. Use it for structure, not conclusions.',
+      where:'Industry Overview · Our Business' },
+    { b:'O', text:'Is the business free of dangerous concentration: no single customer above roughly 25% of revenue, no single supplier, plant or geography that could stop it?',
+      why:'Concentration is disclosed in the risk factors, usually with a percentage.',
+      where:'Risk Factors (first twenty)' },
+    { b:'O', text:'Do I know whether the business is cyclical, and where in the cycle the last three years of financials sit?',
+      why:'Three good years at the top of a cycle look exactly like a growth company.',
+      where:'Risk Factors · Management’s Discussion and Analysis' },
+
+    { b:'W', text:'Do I know the fresh-issue versus offer-for-sale split, and does the company itself receive a meaningful share of the money?',
+      why:'An offer for sale changes who owns the company, not what the company can do.',
+      where:'Summary of the Offer Document · Objects of the Offer' },
+    { b:'W', text:'Are the fresh-issue proceeds going to specific, productive uses, with no more than about 30% to general corporate purposes and unidentified acquisitions?',
+      why:'The regulatory ceiling is 35%. Companies near it lack a specific plan for a third of your money.',
+      where:'Objects of the Offer' },
+    { b:'W', text:'Do the selling shareholders retain a meaningful stake after the issue?',
+      why:'Selling is routine. Selling down to the minimum is a signal.',
+      where:'Capital Structure · Our Promoters and Promoter Group' },
+
+    { b:'N', text:'Is revenue growth consistent across the three restated years, rather than a spike in the year before the IPO?',
+      why:'Companies polish the IPO year. Check the stub period too.',
+      where:'Restated Financial Information · MD&A' },
+    { b:'N', gate:true, text:'Are profits turning into cash (cumulative operating cash flow at least around three-quarters of cumulative profit over three years), or, if not, do I know exactly why and find the reason convincing?',
+      why:'Profit is an opinion; cash is a fact. Lenders are the exception: use asset quality and capital instead.',
+      where:'Restated Cash Flow Statement · MD&A' },
+    { b:'N', text:'Are receivable and inventory days stable or improving across the three years?',
+      why:'Rising days mean growth is being bought with credit, or product is not selling.',
+      where:'Restated Balance Sheet · notes on trade receivables and inventories' },
+    { b:'N', text:'Is return on capital employed attractive on post-issue capital, and have I checked profit for one-offs?',
+      why:'Fresh-issue cash swells equity, so returns fall mechanically after listing. Look for exceptional items.',
+      where:'Basis for Offer Price (KPIs) · notes on exceptional items' },
+    { b:'N', text:'Is debt manageable after the IPO: interest cover above roughly 3x, and pro forma net debt known?',
+      why:'If proceeds repay loans, recompute both leverage and interest cost.',
+      where:'Restated Financial Information · Objects of the Offer' },
+
+    { b:'E', gate:true, text:'Is the governance record clean: no material regulatory action, default or litigation that could change the business rather than merely cost a fine?',
+      why:'The litigation section is the one place bad news is legally required.',
+      where:'Outstanding Litigation and Material Developments · Our Promoters · Our Management' },
+    { b:'E', text:'Are related-party transactions small relative to revenue and on arm’s-length terms, and will they stop or shrink after listing?',
+      why:'Large recurring transactions with promoter entities mean profit depends on prices set inside the family.',
+      where:'Related Party Transactions note in the Restated Financial Information' },
+    { b:'E', text:'Do promoters keep a substantial post-issue stake, with no or limited share pledges?',
+      why:'Minimum promoter contribution is 20% of post-issue capital. What they hold above that is the signal.',
+      where:'Capital Structure · Risk Factors' },
+    { b:'E', text:'Have I read the weighted average cost of acquisition, and does the gap to the IPO price have a convincing explanation?',
+      why:'If insiders bought at ₹20 in the last eighteen months and sell to you at ₹100, the document must justify it.',
+      where:'Basis for Offer Price' },
+
+    { b:'R', text:'Have I read the first twenty risk factors and identified the three biggest, with numbers attached?',
+      why:'Risk factors are ordered by materiality. The top of the list is the company’s own worry list.',
+      where:'Risk Factors' },
+    { b:'R', text:'Have I built my own peer set of listed companies with the same business model, and compared growth, margins, ROCE and cash conversion?',
+      why:'The peer table in the RHP was chosen by the company and its bankers.',
+      where:'Basis for Offer Price (peer table) · NSE / BSE filings of the peers' },
+
+    { b:'S', text:'Have I computed post-issue share count, market capitalisation, diluted EPS, enterprise value, P/E and EV/EBITDA myself?',
+      why:'Issue size is not company size. Pre-issue EPS overstates cheapness.',
+      where:'Capital Structure · Basis for Offer Price' },
+    { b:'S', gate:true, text:'Is the valuation defensible against my own peer set, adjusted for growth and quality, and is the growth the price implies supported by the three-year record?',
+      why:'At 40x earnings, profits must roughly double in five years just for the price to stand still at 20x.',
+      where:'Your own calculation' },
+    { b:'S', gate:true, text:'Would I want to own this business at this valuation if there were no IPO, no subscription numbers and no grey-market premium?',
+      why:'The question that contains all the others.',
+      where:'Your own judgement' },
+  ];
+
+  // Example answers: a hypothetical manufacturing IPO with a cash-conversion question mark.
+  const EXAMPLE = ['yes','yes','yes','yes','yes','yes','yes','yes','dk','no','yes','yes','yes','yes','yes','yes','yes','yes','yes','yes','dk'];
+  const STORE_KEY = 'ipo-owners-test-v1';
+
+  const form = document.getElementById('form');
+  const banner = document.getElementById('exampleBanner');
+  const ipoInput = document.getElementById('ipo');
+  let state = { ipo: '', answers: Array(Q.length).fill(null), example: true, calc: {} };
+
+  // Example figures: the hypothetical company from the article (₹ crore).
+  const EXAMPLE_CALC = { price: 100, preShares: 7, fresh: 300, ofs: 200, debtRepay: 150, gcp: 60,
+    rev: 850, ebitda: 100, pat: 50, interest: 25, networth: 200, debt: 300, cash: 50,
+    recv: 210, recvPrev: 130, revPrev: 650, ocf3: 45, pat3: 120, tax: 25 };
+
+  function load() {
+    try {
+      const raw = localStorage.getItem(STORE_KEY);
+      if (raw) { const s = JSON.parse(raw); if (s && Array.isArray(s.answers) && s.answers.length === Q.length) { state = s; state.example = false; state.calc = state.calc || {}; return; } }
+    } catch (e) {}
+    state.answers = EXAMPLE.slice();
+    state.calc = Object.assign({}, EXAMPLE_CALC);
+    state.example = true;
+  }
+  function save() {
+    if (state.example) return;
+    try { localStorage.setItem(STORE_KEY, JSON.stringify(state)); } catch (e) {}
+  }
+
+  function render() {
+    let html = '';
+    BLOCKS.forEach(function (blk) {
+      html += '<div class="block"><div class="block-head"><span class="block-letter">' + blk.key + '</span><div><h2>' + blk.title + '</h2><span class="eyebrow">' + blk.sub + '</span></div></div>';
+      Q.forEach(function (q, i) {
+        if (q.b !== blk.key) return;
+        const n = String(i + 1).padStart(2, '0');
+        html += '<div class="q" id="q' + (i+1) + '"><div class="q-num">' + n + '</div><div>' +
+          '<p class="q-text">' + q.text + (q.gate ? '<span class="gate-tag">Gate</span>' : '') + '</p>' +
+          '<p class="q-why">' + q.why + '</p>' +
+          '<p class="q-where">Where to look: <b>' + q.where + '</b></p>' +
+          '<div class="answers" role="radiogroup" aria-label="Question ' + (i+1) + '">' +
+            opt(i, 'yes', 'Yes') + opt(i, 'no', 'No') + opt(i, 'dk', 'Don’t know') +
+          '</div></div></div>';
+      });
+      html += '</div>';
+    });
+    form.innerHTML = html;
+    form.addEventListener('change', function (e) {
+      if (e.target.name && e.target.name.indexOf('a') === 0) {
+        const i = parseInt(e.target.name.slice(1), 10);
+        if (state.example) { leaveExample(true); }
+        state.answers[i] = e.target.value;
+        save(); update();
+      }
+    });
+  }
+  function opt(i, v, label) {
+    const checked = state.answers[i] === v ? ' checked' : '';
+    return '<label><input type="radio" name="a' + i + '" value="' + v + '"' + checked + '><span>' + label + '</span></label>';
+  }
+  function syncInputs() {
+    Q.forEach(function (_, i) {
+      const els = form.querySelectorAll('input[name="a' + i + '"]');
+      els.forEach(function (el) { el.checked = state.answers[i] === el.value; });
+    });
+  }
+  function leaveExample(keepAnswers) {
+    state.example = false;
+    if (!keepAnswers) { state.answers = Array(Q.length).fill(null); state.ipo = ''; ipoInput.value = ''; state.calc = {}; syncCalcInputs(); }
+    banner.hidden = true;
+    syncInputs(); save(); update(); renderResults();
+  }
+
+  /* ---------- Calculator ---------- */
+  const FIELDS = [
+    { h: 'The offer' },
+    { k: 'price', l: 'Upper price band', u: '₹ per share', src: 'Price band advertisement' },
+    { k: 'preShares', l: 'Pre-issue shares outstanding', u: 'crore shares', src: 'Capital Structure' },
+    { k: 'fresh', l: 'Fresh issue size', u: '₹ crore', src: 'Objects of the Offer' },
+    { k: 'ofs', l: 'Offer for sale size', u: '₹ crore', src: 'Summary of the Offer' },
+    { k: 'debtRepay', l: 'Fresh proceeds for debt repayment', u: '₹ crore', src: 'Objects of the Offer' },
+    { k: 'gcp', l: 'General corporate purposes + unidentified acquisitions', u: '₹ crore', src: 'Objects of the Offer' },
+    { h: 'Latest full year, restated consolidated' },
+    { k: 'rev', l: 'Revenue from operations', u: '₹ crore', src: 'Restated P&L' },
+    { k: 'ebitda', l: 'EBITDA', u: '₹ crore', src: 'Basis for Offer Price (KPIs)' },
+    { k: 'pat', l: 'Profit after tax', u: '₹ crore', src: 'Restated P&L' },
+    { k: 'interest', l: 'Finance costs', u: '₹ crore', src: 'Restated P&L' },
+    { k: 'networth', l: 'Net worth (total equity)', u: '₹ crore', src: 'Restated Balance Sheet' },
+    { k: 'debt', l: 'Gross borrowings', u: '₹ crore', src: 'Restated Balance Sheet' },
+    { k: 'cash', l: 'Cash and bank balances', u: '₹ crore', src: 'Restated Balance Sheet' },
+    { k: 'recv', l: 'Trade receivables, latest', u: '₹ crore', src: 'Restated Balance Sheet' },
+    { h: 'Trend and cash conversion' },
+    { k: 'recvPrev', l: 'Trade receivables, prior year', u: '₹ crore', src: 'Restated Balance Sheet' },
+    { k: 'revPrev', l: 'Revenue, prior year', u: '₹ crore', src: 'Restated P&L' },
+    { k: 'ocf3', l: 'Operating cash flow, three years added', u: '₹ crore', src: 'Restated Cash Flow Statement' },
+    { k: 'pat3', l: 'Profit after tax, three years added', u: '₹ crore', src: 'Restated P&L' },
+    { k: 'tax', l: 'Tax rate for interest saving', u: '%', src: 'default 25' },
+  ];
+  const fieldsEl = document.getElementById('fields');
+  fieldsEl.innerHTML = FIELDS.map(function (f) {
+    if (f.h) return '<h3>' + f.h + '</h3>';
+    return '<div class="field"><label for="c_' + f.k + '">' + f.l + '</label>' +
+      '<input id="c_' + f.k + '" type="number" inputmode="decimal" step="any" data-k="' + f.k + '" placeholder="' + f.u + '">' +
+      '<small>' + f.src + '</small></div>';
+  }).join('');
+  function syncCalcInputs() {
+    FIELDS.forEach(function (f) { if (!f.k) return; const el = document.getElementById('c_' + f.k); const v = state.calc[f.k]; el.value = (v === undefined || v === null || v === '') ? '' : v; });
+  }
+  fieldsEl.addEventListener('input', function (e) {
+    const k = e.target.dataset.k; if (!k) return;
+    if (state.example) { state.example = false; banner.hidden = true; }
+    const v = e.target.value; state.calc[k] = v === '' ? null : Number(v);
+    save(); renderResults();
+  });
+
+  function num(k) { const v = state.calc[k]; return (v === null || v === undefined || v === '' || isNaN(v)) ? null : Number(v); }
+  function fmt(v, d) { if (v === null || !isFinite(v)) return '—'; return v.toLocaleString('en-IN', { maximumFractionDigits: d === undefined ? 1 : d, minimumFractionDigits: 0 }); }
+  function pct(v) { return v === null || !isFinite(v) ? '—' : fmt(v * 100, 0) + '%'; }
+  function x(v) { return v === null || !isFinite(v) ? '—' : fmt(v, 1) + 'x'; }
+  function cr(v) { if (v === null || !isFinite(v)) return '—'; return v < 0 ? '₹' + fmt(-v, 0) + ' cr net cash' : '₹' + fmt(v, 0) + ' cr'; }
+  function safe(a, b) { return (a === null || b === null || b === 0) ? null : a / b; }
+
+  function compute() {
+    const price = num('price'), pre = num('preShares'), fresh = num('fresh'), ofs = num('ofs');
+    const debtRepay = num('debtRepay') || 0, gcp = num('gcp');
+    const rev = num('rev'), ebitda = num('ebitda'), pat = num('pat'), interest = num('interest');
+    const nw = num('networth'), debt = num('debt'), cash = num('cash'), recv = num('recv');
+    const recvPrev = num('recvPrev'), revPrev = num('revPrev'), ocf3 = num('ocf3'), pat3 = num('pat3');
+    const tax = num('tax') === null ? 25 : num('tax');
+    const r = {};
+    r.newShares = (price && fresh !== null) ? fresh / price : null;
+    r.postShares = (pre !== null && r.newShares !== null) ? pre + r.newShares : null;
+    r.mcap = (r.postShares !== null && price) ? r.postShares * price : null;
+    r.issue = (fresh !== null && ofs !== null) ? fresh + ofs : null;
+    r.freshShare = safe(fresh, r.issue);
+    r.gcpShare = safe(gcp, fresh);
+    r.eps = safe(pat, r.postShares);
+    r.pe = safe(price, r.eps);
+    r.epsPre = safe(pat, pre); r.pePre = safe(price, r.epsPre);
+    const rate = safe(interest, debt);
+    r.intSaving = (rate !== null && debtRepay) ? debtRepay * rate * (1 - tax / 100) : null;
+    r.patAdj = (pat !== null && r.intSaving !== null) ? pat + r.intSaving : null;
+    r.peAdj = (r.patAdj !== null && r.postShares) ? price / (r.patAdj / r.postShares) : null;
+    r.netDebtPre = (debt !== null && cash !== null) ? debt - cash : null;
+    r.netDebtPost = (r.netDebtPre !== null && fresh !== null) ? r.netDebtPre - fresh : null;
+    r.ev = (r.mcap !== null && r.netDebtPost !== null) ? r.mcap + r.netDebtPost : null;
+    r.evEbitda = safe(r.ev, ebitda);
+    r.ebitdaM = safe(ebitda, rev); r.patM = safe(pat, rev);
+    r.roePre = safe(pat, nw);
+    r.roePost = (pat !== null && nw !== null && fresh !== null) ? pat / (nw + fresh) : null;
+    r.roce = (ebitda !== null && nw !== null && debt !== null && (nw + debt) > 0) ? ebitda / (nw + debt) : null;
+    r.cover = safe(ebitda, interest);
+    r.dePre = safe(r.netDebtPre, nw);
+    r.dePost = (r.netDebtPost !== null && nw !== null && fresh !== null) ? r.netDebtPost / (nw + fresh) : null;
+    r.days = (recv !== null && rev) ? recv / rev * 365 : null;
+    r.daysPrev = (recvPrev !== null && revPrev) ? recvPrev / revPrev * 365 : null;
+    r.growth = (rev !== null && revPrev) ? rev / revPrev - 1 : null;
+    r.conv = safe(ocf3, pat3);
+    return r;
+  }
+
+  function renderResults() {
+    const r = compute();
+    const rows = [
+      ['h', 'Size and structure'],
+      ['New shares issued', fmt(r.newShares, 2) + (r.newShares !== null ? ' cr' : '')],
+      ['Post-issue shares', fmt(r.postShares, 2) + (r.postShares !== null ? ' cr' : '')],
+      ['Post-issue market capitalisation', cr(r.mcap)],
+      ['Total issue size', cr(r.issue)],
+      ['Fresh issue as share of issue', pct(r.freshShare)],
+      ['GCP + unidentified acquisitions as share of fresh issue', pct(r.gcpShare)],
+      ['h', 'Valuation'],
+      ['Diluted EPS (post-issue)', r.eps === null ? '—' : '₹' + fmt(r.eps, 2)],
+      ['P/E at upper band', x(r.pe)],
+      ['P/E on pre-issue shares (the flattering one)', x(r.pePre), 'dim'],
+      ['P/E after interest saving on debt repaid', x(r.peAdj)],
+      ['Net debt after issue', cr(r.netDebtPost)],
+      ['Enterprise value', cr(r.ev)],
+      ['EV / EBITDA', x(r.evEbitda)],
+      ['h', 'Quality'],
+      ['Revenue growth, latest year', pct(r.growth)],
+      ['EBITDA margin', pct(r.ebitdaM)],
+      ['PAT margin', pct(r.patM)],
+      ['ROE on pre-issue equity', pct(r.roePre), 'dim'],
+      ['ROE on post-issue equity', pct(r.roePost)],
+      ['EBITDA / (net worth + debt), a ROCE proxy', pct(r.roce)],
+      ['h', 'Cash and balance sheet'],
+      ['Operating cash flow / PAT, three years', pct(r.conv)],
+      ['Receivable days, prior year → latest', (r.daysPrev === null && r.days === null) ? '—' : fmt(r.daysPrev, 0) + ' → ' + fmt(r.days, 0)],
+      ['EBITDA / finance costs', x(r.cover)],
+      ['Net debt / equity, before → after issue', (r.dePre === null && r.dePost === null) ? '—' : fmt(r.dePre, 2) + ' → ' + fmt(r.dePost, 2)],
+    ];
+    document.getElementById('results').innerHTML = rows.map(function (row) {
+      if (row[0] === 'h') return '<h3>' + row[1] + '</h3>';
+      return '<div class="row' + (row[2] ? ' ' + row[2] : '') + '"><span>' + row[0] + '</span><span>' + row[1] + '</span></div>';
+    }).join('');
+    document.getElementById('assume').textContent = 'Assumptions: all fresh-issue proceeds are treated as cash or debt reduction until spent, issue expenses are ignored, the interest saving uses the average rate on gross borrowings, and the ROCE proxy uses EBITDA because EBIT is not an input. These are approximations for comparison, not audited figures.';
+  }
+
+  document.getElementById('suggest').addEventListener('click', function () {
+    const r = compute(); const set = []; const toast = document.getElementById('calcToast');
+    function put(i, v) { state.answers[i] = v; set.push(i + 1); }
+    if (r.freshShare !== null) put(4, r.freshShare >= 0.3 ? 'yes' : 'no');
+    if (r.gcpShare !== null) put(5, r.gcpShare <= 0.30 ? 'yes' : 'no');
+    if (r.conv !== null) put(8, r.conv >= 0.75 ? 'yes' : 'dk');
+    if (r.days !== null && r.daysPrev !== null) put(9, r.days <= r.daysPrev * 1.10 ? 'yes' : 'no');
+    if (r.cover !== null && r.dePost !== null) put(11, (r.cover >= 4 && r.dePost <= 1) ? 'yes' : 'no');
+    if (r.pe !== null && r.evEbitda !== null) put(18, 'yes');
+    if (!set.length) { toast.textContent = 'Enter more figures first.'; return; }
+    if (state.example) { state.example = false; banner.hidden = true; }
+    syncInputs(); save(); update();
+    document.querySelectorAll('.sugg-tag').forEach(function (el) { el.remove(); });
+    set.forEach(function (n) { const t = document.querySelector('#q' + n + ' .q-text'); if (t) t.insertAdjacentHTML('beforeend', '<span class="sugg-tag">From your numbers</span>'); });
+    toast.textContent = 'Suggested answers for questions ' + set.join(', ') + '. Change any you disagree with. Question 9 is left as “Don’t know” when cash conversion is weak, because the gate asks you to find the reason.';
+  });
+  document.getElementById('clearCalc').addEventListener('click', function () {
+    if (state.example) { state.example = false; banner.hidden = true; }
+    state.calc = {}; syncCalcInputs(); save(); renderResults();
+  });
+
+  function evaluate() {
+    const a = state.answers;
+    const answered = a.filter(Boolean).length;
+    const gates = Q.map(function (q, i) { return q.gate ? i : -1; }).filter(function (i) { return i >= 0; });
+    const gateNo = gates.filter(function (i) { return a[i] === 'no'; });
+    const gateYes = gates.filter(function (i) { return a[i] === 'yes'; });
+    const dks = a.map(function (v, i) { return v === 'dk' ? i : -1; }).filter(function (i) { return i >= 0; });
+    const nonGateNo = a.map(function (v, i) { return (v === 'no' && !Q[i].gate) ? i : -1; }).filter(function (i) { return i >= 0; });
+    const complete = answered === Q.length;
+
+    let st, title, text, next = [], nextLabel = 'Read next';
+    if (answered === 0) {
+      st = 'none'; title = 'Not enough answers yet';
+      text = 'Work through the questions with the RHP open. The verdict updates as you go and is provisional until all 21 are answered.';
+    } else if (gateNo.length) {
+      st = 'pass'; title = 'Pass';
+      text = 'A gate question is answered “No”. In this method that ends the analysis, however strong the rest looks. If you think the gate is wrong for this company, write down why before overriding it.';
+      nextLabel = 'Failed gates';
+      next = gateNo.map(function (i) { return { n: i + 1, t: Q[i].where, s: shortText(i) }; });
+    } else if (dks.length) {
+      st = 'investigate'; title = 'Investigate more';
+      text = 'You have “Don’t know” answers. Each one names the section of the RHP to read next. Come back when they are Yes or No.';
+      next = dks.map(function (i) { return { n: i + 1, t: Q[i].where, s: shortText(i) }; });
+    } else if (nonGateNo.length >= 3) {
+      st = 'investigate'; title = 'Investigate more';
+      text = 'No gate has failed, but three or more weaknesses are stacking up. Decide whether they are explained and priced in, or whether together they amount to a reason to pass.';
+      nextLabel = 'Weaknesses to resolve';
+      next = nonGateNo.map(function (i) { return { n: i + 1, t: Q[i].where, s: shortText(i) }; });
+    } else {
+      st = 'ready'; title = complete ? 'Ready to decide' : 'On track, keep going';
+      text = complete
+        ? 'You have done the work. This is not a recommendation to apply: it means the gates are open, nothing is unknown, and any weaknesses are few enough to price. The decision is yours.'
+        : 'No gate has failed and nothing is unknown so far. Finish the remaining questions before treating this as a verdict.';
+      if (nonGateNo.length) { nextLabel = 'Price these in'; next = nonGateNo.map(function (i) { return { n: i + 1, t: Q[i].where, s: shortText(i) }; }); }
+    }
+    return { st: st, title: title, text: text, next: next, nextLabel: nextLabel, answered: answered, gateYes: gateYes.length, gates: gates, complete: complete };
+  }
+  function shortText(i) {
+    const t = Q[i].text.replace(/\s*\(.*?\)\s*/g, ' ').replace(/[:,].*$/, '');
+    return t.length > 80 ? t.slice(0, 77) + '…' : t;
+  }
+
+  function update() {
+    const r = evaluate();
+    document.getElementById('bar').style.width = Math.round(100 * r.answered / Q.length) + '%';
+    document.getElementById('answered').textContent = r.answered + ' of ' + Q.length + ' answered';
+    document.getElementById('gatesOk').textContent = 'gates ' + r.gateYes + '/' + r.gates.length + ' open';
+    const out = document.getElementById('outcome');
+    out.dataset.state = r.st;
+    document.getElementById('outcomeLabel').textContent = (r.st === 'none' || r.complete) ? 'Outcome' : 'Provisional outcome';
+    document.getElementById('outcomeTitle').textContent = r.title;
+    document.getElementById('outcomeText').textContent = r.text;
+
+    const gl = document.getElementById('gateList');
+    gl.innerHTML = r.gates.map(function (i) {
+      const v = state.answers[i];
+      const cls = v === 'yes' ? 'yes' : v === 'no' ? 'no' : v === 'dk' ? 'dk' : '';
+      return '<li><span class="dot ' + cls + '"></span><a href="#q' + (i+1) + '" style="color:inherit;text-decoration:none">' + (i+1) + '. ' + shortText(i) + '</a></li>';
+    }).join('');
+
+    document.getElementById('nextLabel').textContent = r.nextLabel;
+    const nl = document.getElementById('nextList');
+    nl.innerHTML = r.next.map(function (x) { return '<li><a href="#q' + x.n + '" style="color:inherit;text-decoration:none">' + x.s + '</a><br><b>' + x.t + '</b></li>'; }).join('');
+    document.getElementById('nextEmpty').hidden = r.next.length > 0;
+  }
+
+  function summary() {
+    const r = evaluate();
+    const name = state.ipo ? state.ipo : 'Unnamed IPO';
+    const lines = ['IPO Owner\'s Test: ' + name, 'Outcome: ' + r.title + (r.complete ? '' : ' (provisional, ' + r.answered + '/' + Q.length + ' answered)'), ''];
+    Q.forEach(function (q, i) {
+      const v = state.answers[i];
+      const lab = v === 'yes' ? 'Yes' : v === 'no' ? 'No' : v === 'dk' ? 'Don\'t know' : 'Unanswered';
+      lines.push((i+1) + '. ' + (q.gate ? '[GATE] ' : '') + lab + ' — ' + q.text);
+    });
+    if (r.next.length) { lines.push('', r.nextLabel + ':'); r.next.forEach(function (x) { lines.push('- Q' + x.n + ': ' + x.t); }); }
+    const c = compute();
+    if (c.mcap !== null || c.pe !== null || c.conv !== null) {
+      lines.push('', 'Numbers:');
+      lines.push('- Post-issue market cap: ' + cr(c.mcap) + '; P/E ' + x(c.pe) + ' (after interest saving ' + x(c.peAdj) + '); EV/EBITDA ' + x(c.evEbitda));
+      lines.push('- Fresh issue ' + pct(c.freshShare) + ' of issue; GCP share of fresh ' + pct(c.gcpShare));
+      lines.push('- OCF/PAT 3-yr ' + pct(c.conv) + '; receivable days ' + fmt(c.daysPrev, 0) + ' -> ' + fmt(c.days, 0) + '; EBITDA/interest ' + x(c.cover) + '; net debt/equity after issue ' + fmt(c.dePost, 2));
+    }
+    lines.push('', 'Educational tool. Not investment advice.');
+    return lines.join('\n');
+  }
+
+  document.getElementById('copy').addEventListener('click', function () {
+    const t = summary(); const toast = document.getElementById('toast');
+    const done = function () { toast.textContent = 'Summary copied. Paste it into your notes.'; setTimeout(function(){ toast.textContent=''; }, 3000); };
+    if (navigator.clipboard && navigator.clipboard.writeText) { navigator.clipboard.writeText(t).then(done, function(){ fallback(t, done); }); }
+    else { fallback(t, done); }
+  });
+  function fallback(t, done) {
+    const ta = document.createElement('textarea'); ta.value = t; document.body.appendChild(ta); ta.select();
+    try { document.execCommand('copy'); done(); } catch (e) { document.getElementById('toast').textContent = 'Copy blocked by the browser. Select the answers and copy manually.'; }
+    document.body.removeChild(ta);
+  }
+  document.getElementById('reset').addEventListener('click', function () {
+    state.example = false; leaveExample(false);
+    try { localStorage.removeItem(STORE_KEY); } catch (e) {}
+    document.getElementById('toast').textContent = 'Answers cleared.'; setTimeout(function(){ document.getElementById('toast').textContent=''; }, 2500);
+  });
+  document.getElementById('clearExample').addEventListener('click', function () { leaveExample(false); });
+  ipoInput.addEventListener('input', function () { if (state.example) leaveExample(true); state.ipo = ipoInput.value; save(); });
+
+  load();
+  render();
+  banner.hidden = !state.example;
+  ipoInput.value = state.ipo || '';
+  syncCalcInputs();
+  renderResults();
+  update();
+})();
+</script>
