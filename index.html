@@ -300,12 +300,10 @@
           <a href="https://www.nseindia.com/market-data/all-upcoming-issues-ipo" target="_blank" rel="noopener">NSE IPOs</a> ·
           <a href="https://www.bseindia.com/publicissue.html" target="_blank" rel="noopener">BSE IPOs</a>.
           Use the RHP (red herring prospectus) if it exists; the DRHP is the earlier draft and its figures may be older.</li>
-        <li><b>Fill in the values.</b> Paste the document link below to keep it handy and open it. Under every box in the calculator is the heading to search for inside the PDF with Ctrl+F; click it to copy. The page does not read the document for you.</li>
+        <li><b>Fill in the values.</b> Open the PDF alongside this page. Under every box in the calculator is the heading to search for inside the PDF with Ctrl+F; click it to copy. The page does not read the document for you.</li>
       </ol>
       <div class="doc-link">
-        <input id="docUrl" type="url" placeholder="Paste the RHP or DRHP link here to open it (the page does not read it)" autocomplete="off">
-        <a id="docOpen" href="#" target="_blank" rel="noopener" hidden>Open document ↗</a>
-        <a id="guideToggle" href="#">Where to look in any RHP</a>
+        <a id="guideToggle" href="#">Show where to look in any RHP</a>
       </div>
       <div class="guide" id="guide" hidden>
         <p class="guide-intro">Page numbers differ from one document to the next, so use the table of contents on the first pages, or press <b>Ctrl+F</b> (⌘F on a Mac) in the PDF and search for the heading. Click a search term to copy it. Printed page numbers usually run a few pages behind the PDF viewer's page counter.</p>
@@ -463,7 +461,7 @@
   let state = { ipo: '', answers: Array(Q.length).fill(null), example: false, calc: {} };
 
   function load() {
-    state = { ipo: '', ipoId: '', docUrl: '', answers: Array(Q.length).fill(null), example: false, calc: {} };
+    state = { ipo: '', answers: Array(Q.length).fill(null), example: false, calc: {} };
   }
   function save() { /* intentionally no persistence */ }
 
@@ -783,19 +781,12 @@
 
 
   /* Document tools: web search from the typed name, and a remembered RHP link */
-  const docUrl = document.getElementById('docUrl'), docOpen = document.getElementById('docOpen'), searchWeb = document.getElementById('searchWeb');
+  const searchWeb = document.getElementById('searchWeb');
   function refreshDocTools() {
     const name = (state.ipo || '').trim();
     searchWeb.href = 'https://www.google.com/search?q=' + encodeURIComponent((name ? name + ' ' : '') + 'red herring prospectus RHP filetype:pdf');
     searchWeb.textContent = name ? 'Search the web for “' + name + ' RHP”' : 'Search the web for the RHP';
-    const u = (state.docUrl || '').trim();
-    if (/^https?:\/\//i.test(u)) { docOpen.href = u; docOpen.hidden = false; } else { docOpen.hidden = true; }
   }
-  docUrl.addEventListener('input', function () {
-    if (state.example) { state.example = false; banner.hidden = true; }
-    state.docUrl = docUrl.value; save(); refreshDocTools();
-    if (/^https?:\/\//i.test(docUrl.value.trim())) document.getElementById('guide').hidden = false;
-  });
 
   /* Where to look in any RHP: the headings are standard even though page numbers are not */
   const GUIDE = [
@@ -817,7 +808,7 @@
       termChips(g[3]) + '</div>';
   }).join('');
   wireTerms(guideRows);
-  document.getElementById('guideToggle').addEventListener('click', function (e) { e.preventDefault(); const g = document.getElementById('guide'); g.hidden = !g.hidden; });
+  document.getElementById('guideToggle').addEventListener('click', function (e) { e.preventDefault(); const g = document.getElementById('guide'); g.hidden = !g.hidden; e.target.textContent = g.hidden ? 'Show where to look in any RHP' : 'Hide the guide'; });
   ipoInput.addEventListener('input', refreshDocTools);
 
   load();
@@ -827,7 +818,6 @@
   syncCalcInputs();
   renderResults();
   update();
-  docUrl.value = state.docUrl || '';
   refreshDocTools();
 })();
 </script>
