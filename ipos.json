@@ -1,0 +1,79 @@
+{
+  "updated": "2026-09-04",
+  "ipos": [
+    {
+      "id": "vinod-texworld-2025",
+      "name": "Vinod Texworld Ltd (NSE Emerge, SME)",
+      "status": "upcoming",
+      "open": "",
+      "close": "",
+      "priceBand": [],
+      "lot": null,
+      "regulation": "SME, Chapter IX, fixed price (Reg. 253)",
+      "rhp": {
+        "url": "https://nsearchives.nseindia.com/emerge/corporates/content/Registration_29092025212200_VTLDraftProspectusfinal.pdf",
+        "date": "draft prospectus dated 29 Sep 2025"
+      },
+      "figures": {
+        "price": null,
+        "preShares": 1.16012,
+        "fresh": null,
+        "freshShares": 0.45568,
+        "ofs": 0,
+        "debtRepay": 6.5,
+        "gcp": null,
+        "rev": 335.37,
+        "ebitda": 21.52,
+        "pat": 9.21,
+        "interest": 5.27,
+        "networth": 31.98,
+        "debt": 66.28,
+        "cash": 0.21,
+        "recv": 87.37,
+        "recvPrev": 76.49,
+        "revPrev": 271.49,
+        "ocf3": -24.39,
+        "pat3": 15.18,
+        "tax": 25.6
+      },
+      "pages": {
+        "Summary of the Offer Document": 29,
+        "Summary of financial information": 34,
+        "Contingent liabilities and related-party summary": 36,
+        "Risk Factors": 42,
+        "Customer concentration": 43,
+        "Negative cash flow risk factor": 44,
+        "The Issue (share counts, allocation)": 87,
+        "Restated balance sheet": 90,
+        "Restated profit and loss": 91,
+        "Restated cash flow": 92,
+        "Capital Structure": 108,
+        "Objects of the Issue": 129,
+        "Basis for Issue Price": 143,
+        "Peer comparison": 145,
+        "Group companies": 268,
+        "Related party transactions (Note AB)": 313,
+        "Financial indebtedness": 346,
+        "Outstanding litigation": 349
+      },
+      "structural": {
+        "promoterPre": 76.72,
+        "promoterPost": 55.08,
+        "sellers": "None, the entire issue is fresh; promoter group incl. relatives 93.10% pre-issue, about 66.85% post-issue",
+        "pledge": "Check Capital Structure, p.108"
+      },
+      "notes": [
+        "Draft prospectus, not the final one: the issue price, issue size, lot and dates were blank ([●]) on 29 Sep 2025. Enter the price once the prospectus is filed; the calculator then uses 45,56,800 new shares to work out the issue size and market cap.",
+        "Figures are restated under Indian GAAP (not Ind AS), shown in ₹ lakh in the document and converted here to ₹ crore.",
+        "Operating cash flow was negative in all three years (₹-11.85 cr FY25, ₹-6.68 cr FY24, ₹-5.86 cr FY23) while profit rose to ₹9.21 cr; receivables and inventories absorbed the cash. The company itself lists this as risk factor 3 (p.44).",
+        "The company has given a corporate guarantee of ₹76.27 cr for a loan of promoter-group company Vinod Cotfab Pvt Ltd, more than twice its own net worth of ₹31.98 cr (risk factor 5; contingent liabilities p.36). Amount payable to Vinod Cotfab was ₹39.61 cr at FY25, up from ₹7.15 cr a year earlier (p.39).",
+        "Top customer 16.3% and top ten customers 50.8% of FY25 revenue (p.43). Three group companies are in the same line of business (p.268).",
+        "Objects: plant expansion ₹6.39 cr, loan repayment ₹6.50 cr, working capital ₹18.50 cr, plus general corporate purposes capped at the lower of 15% of the issue or ₹10 cr under SME rules, and issue expenses (p.129). No monitoring agency because the issue is below ₹50 cr (p.141).",
+        "SME rules differ from the mainboard: minimum application above ₹2 lakh (two lots), at least 50% of the net issue to individual investors, a market-maker portion, and trading in lots after listing (p.87-88).",
+        "Peer table in the document: Jakharia Fabric P/E 13.3, Borana Weaves 10.9; an 'industry average' of 40.2 is cited from a magazine table (p.145). Promoters acquired no shares in the preceding year (p.39).",
+        "Three statutory/tax notices against the company totalling ₹0.49 cr (p.34). Effective tax rate FY25 25.6%."
+      ],
+      "compiled": "2026-09-04"
+    }
+  ]
+}

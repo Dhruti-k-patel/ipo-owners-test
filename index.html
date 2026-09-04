@@ -1,3 +1,5 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>IPO Owner's Test</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Serif:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
@@ -98,14 +100,33 @@
     background: var(--ground); color: var(--ink);
   }
   .ipo-name input:focus { outline: 2px solid var(--focus); outline-offset: 1px; }
-
-  .example-banner {
-    display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap;
-    margin: 20px 0 0; padding: 10px 14px;
-    background: var(--investigate-bg); border: 1px solid var(--rule); border-radius: 6px;
-    font-size: 14px;
+  .ipo-name select {
+    font: inherit; font-size: 15px; padding: 9px 12px;
+    border: 1px solid var(--rule); border-radius: 6px;
+    background: var(--surface); color: var(--ink); max-width: 360px;
   }
-  .example-banner[hidden] { display: none; }
+  .ipo-name select:focus { outline: 2px solid var(--focus); outline-offset: 1px; }
+
+  .doc-tools { margin: 18px 0 0; padding: 12px 0 0; border-top: 1px solid var(--rule); }
+  .ways { margin: 8px 0 0; padding-left: 20px; font-size: 14px; display: grid; gap: 6px; max-width: 78ch; }
+  .ways b { font-weight: 600; }
+  .doc-link { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin-top: 10px; }
+  .doc-link input { flex: 1 1 320px; max-width: 560px; font: inherit; font-size: 14px; padding: 8px 12px; border: 1px solid var(--rule); border-radius: 6px; background: var(--ground); color: var(--ink); }
+  .doc-link input:focus { outline: 2px solid var(--focus); outline-offset: 1px; }
+  .doc-link a { font-size: 14px; font-weight: 500; white-space: nowrap; }
+  .doc-link a[hidden] { display: none; }
+  .ipo-info { margin: 18px 0 0; padding: 14px 18px 12px; border: 1px solid var(--rule); border-left: 4px solid var(--accent); border-radius: 6px; background: var(--surface-2); }
+  .ipo-info[hidden] { display: none; }
+  .ipo-info-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; flex-wrap: wrap; }
+  .ipo-info-head h3 { font-size: 18px; font-weight: 600; margin-top: 2px; }
+  .ipo-info-head a { font-size: 14px; font-weight: 500; white-space: nowrap; margin-top: 4px; }
+  .ipo-meta { margin: 6px 0 0; font-size: 13.5px; color: var(--muted); }
+  .ipo-pages { margin: 8px 0 0; font-family: "IBM Plex Mono", monospace; font-size: 12.5px; color: var(--ink); line-height: 1.7; }
+  .ipo-pages b { color: var(--muted); font-weight: 500; }
+  .ipo-notes { margin: 8px 0 0; padding-left: 18px; font-size: 13.5px; }
+  .ipo-notes:empty { display: none; }
+  .ipo-verify { margin: 10px 0 0; font-size: 12.5px; color: var(--muted); }
+
 
   main.grid {
     display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: 32px;
@@ -253,13 +274,37 @@
         <p class="lede">Twenty-one questions from the OWNERS framework. Answer each from the red herring prospectus, not from memory. Five are gates: a “No” on any of them ends the test. A “Don't know” anywhere sends you back to the document.</p>
       </div>
       <div class="ipo-name">
-        <label class="eyebrow" for="ipo">IPO under review</label>
-        <input id="ipo" type="text" placeholder="Company name (optional)" autocomplete="off">
+        <label class="eyebrow" for="ipoSelect">IPO under review</label>
+        <select id="ipoSelect"><option value="">Loading IPO list…</option></select>
+        <input id="ipo" type="text" placeholder="Or type a company name" autocomplete="off">
       </div>
     </div>
-    <div class="example-banner" id="exampleBanner">
-      <span><b>Example answers loaded</b> for a hypothetical manufacturing IPO, to show how the routing works. They are not about any real company.</span>
-      <button type="button" id="clearExample">Clear and start my own</button>
+    <div class="doc-tools" id="docTools">
+      <span class="eyebrow">Three ways to get the figures</span>
+      <ol class="ways">
+        <li><b>Pick an IPO from the list.</b> The calculator fills itself from figures compiled from the offer document, with page references.</li>
+        <li><b>Find the offer document yourself.</b>
+          <a id="searchWeb" href="#" target="_blank" rel="noopener">Search the web for the RHP</a> ·
+          <a href="https://www.sebi.gov.in/filings/public-issues.html" target="_blank" rel="noopener">SEBI filings</a> ·
+          <a href="https://www.nseindia.com/market-data/all-upcoming-issues-ipo" target="_blank" rel="noopener">NSE IPOs</a> ·
+          <a href="https://www.bseindia.com/publicissue.html" target="_blank" rel="noopener">BSE IPOs</a>.
+          Use the RHP (red herring prospectus) if it exists; the DRHP is the earlier draft and its figures may be older.</li>
+        <li><b>Type the figures.</b> Paste the document link below so it stays with your answers, then fill the calculator from the pages it names.</li>
+      </ol>
+      <div class="doc-link">
+        <input id="docUrl" type="url" placeholder="Paste the RHP or DRHP link (optional)" autocomplete="off">
+        <a id="docOpen" href="#" target="_blank" rel="noopener" hidden>Open document ↗</a>
+      </div>
+    </div>
+    <div class="ipo-info" id="ipoInfo" hidden>
+      <div class="ipo-info-head">
+        <div><span class="eyebrow">Figures pre-filled from the RHP</span><h3 id="infoName"></h3></div>
+        <a id="infoRhp" href="#" target="_blank" rel="noopener">Open the RHP ↗</a>
+      </div>
+      <p class="ipo-meta" id="infoMeta"></p>
+      <p class="ipo-pages" id="infoPages"></p>
+      <ul class="ipo-notes" id="infoNotes"></ul>
+      <p class="ipo-verify">These figures were typed by the author from the offer document and can contain errors. The calculator below is editable: check any number you rely on against the page cited.</p>
     </div>
   </div>
 </header>
@@ -318,7 +363,7 @@
 
 <footer class="note">
   <div class="wrap">
-    This tool is for educational purposes only. It does not constitute investment advice or a recommendation to apply for, buy or sell any security. “Ready to decide” means you have done the work; the decision, and its consequences, are yours. Consult a SEBI-registered investment adviser where appropriate. Your answers are saved only in this browser.
+    This tool is for educational purposes only. It does not constitute investment advice or a recommendation to apply for, buy or sell any security. “Ready to decide” means you have done the work; the decision, and its consequences, are yours. Consult a SEBI-registered investment adviser where appropriate. Nothing you enter is stored or sent anywhere; the page starts blank every time, so copy the summary before you close it.
   </div>
 </footer>
 
@@ -405,32 +450,16 @@
   ];
 
   // Example answers: a hypothetical manufacturing IPO with a cash-conversion question mark.
-  const EXAMPLE = ['yes','yes','yes','yes','yes','yes','yes','yes','dk','no','yes','yes','yes','yes','yes','yes','yes','yes','yes','yes','dk'];
-  const STORE_KEY = 'ipo-owners-test-v1';
-
+  // The page starts blank on every visit. Nothing is pre-filled, stored in the browser, or sent anywhere.
   const form = document.getElementById('form');
-  const banner = document.getElementById('exampleBanner');
+  const banner = { hidden: true };   // no example banner exists; kept so the flag logic stays inert
   const ipoInput = document.getElementById('ipo');
-  let state = { ipo: '', answers: Array(Q.length).fill(null), example: true, calc: {} };
-
-  // Example figures: the hypothetical company from the article (₹ crore).
-  const EXAMPLE_CALC = { price: 100, preShares: 7, fresh: 300, ofs: 200, debtRepay: 150, gcp: 60,
-    rev: 850, ebitda: 100, pat: 50, interest: 25, networth: 200, debt: 300, cash: 50,
-    recv: 210, recvPrev: 130, revPrev: 650, ocf3: 45, pat3: 120, tax: 25 };
+  let state = { ipo: '', answers: Array(Q.length).fill(null), example: false, calc: {} };
 
   function load() {
-    try {
-      const raw = localStorage.getItem(STORE_KEY);
-      if (raw) { const s = JSON.parse(raw); if (s && Array.isArray(s.answers) && s.answers.length === Q.length) { state = s; state.example = false; state.calc = state.calc || {}; return; } }
-    } catch (e) {}
-    state.answers = EXAMPLE.slice();
-    state.calc = Object.assign({}, EXAMPLE_CALC);
-    state.example = true;
+    state = { ipo: '', ipoId: '', docUrl: '', answers: Array(Q.length).fill(null), example: false, calc: {} };
   }
-  function save() {
-    if (state.example) return;
-    try { localStorage.setItem(STORE_KEY, JSON.stringify(state)); } catch (e) {}
-  }
+  function save() { /* intentionally no persistence */ }
 
   function render() {
     let html = '';
@@ -471,7 +500,7 @@
   }
   function leaveExample(keepAnswers) {
     state.example = false;
-    if (!keepAnswers) { state.answers = Array(Q.length).fill(null); state.ipo = ''; ipoInput.value = ''; state.calc = {}; syncCalcInputs(); }
+    if (!keepAnswers) { state.answers = Array(Q.length).fill(null); state.ipo = ''; state.ipoId = ''; ipoInput.value = ''; state.calc = {}; syncCalcInputs(); document.getElementById('ipoSelect').value = ''; document.getElementById('ipoInfo').hidden = true; }
     banner.hidden = true;
     syncInputs(); save(); update(); renderResults();
   }
@@ -482,6 +511,7 @@
     { k: 'price', l: 'Upper price band', u: '₹ per share', src: 'Price band advertisement' },
     { k: 'preShares', l: 'Pre-issue shares outstanding', u: 'crore shares', src: 'Capital Structure' },
     { k: 'fresh', l: 'Fresh issue size', u: '₹ crore', src: 'Objects of the Offer' },
+    { k: 'freshShares', l: 'Fresh issue, number of new shares (if the amount is not yet known)', u: 'crore shares', src: 'The Issue' },
     { k: 'ofs', l: 'Offer for sale size', u: '₹ crore', src: 'Summary of the Offer' },
     { k: 'debtRepay', l: 'Fresh proceeds for debt repayment', u: '₹ crore', src: 'Objects of the Offer' },
     { k: 'gcp', l: 'General corporate purposes + unidentified acquisitions', u: '₹ crore', src: 'Objects of the Offer' },
@@ -526,14 +556,17 @@
   function safe(a, b) { return (a === null || b === null || b === 0) ? null : a / b; }
 
   function compute() {
-    const price = num('price'), pre = num('preShares'), fresh = num('fresh'), ofs = num('ofs');
+    const price = num('price'), pre = num('preShares'), ofs = num('ofs');
+    const freshSh = num('freshShares');
+    let fresh = num('fresh');
+    if (fresh === null && freshSh !== null && price) fresh = freshSh * price;
     const debtRepay = num('debtRepay') || 0, gcp = num('gcp');
     const rev = num('rev'), ebitda = num('ebitda'), pat = num('pat'), interest = num('interest');
     const nw = num('networth'), debt = num('debt'), cash = num('cash'), recv = num('recv');
     const recvPrev = num('recvPrev'), revPrev = num('revPrev'), ocf3 = num('ocf3'), pat3 = num('pat3');
     const tax = num('tax') === null ? 25 : num('tax');
     const r = {};
-    r.newShares = (price && fresh !== null) ? fresh / price : null;
+    r.newShares = (price && fresh !== null) ? fresh / price : freshSh;
     r.postShares = (pre !== null && r.newShares !== null) ? pre + r.newShares : null;
     r.mcap = (r.postShares !== null && price) ? r.postShares * price : null;
     r.issue = (fresh !== null && ofs !== null) ? fresh + ofs : null;
@@ -545,7 +578,7 @@
     const rate = safe(interest, debt);
     r.intSaving = (rate !== null && debtRepay) ? debtRepay * rate * (1 - tax / 100) : null;
     r.patAdj = (pat !== null && r.intSaving !== null) ? pat + r.intSaving : null;
-    r.peAdj = (r.patAdj !== null && r.postShares) ? price / (r.patAdj / r.postShares) : null;
+    r.peAdj = (price && r.patAdj !== null && r.patAdj > 0 && r.postShares) ? price / (r.patAdj / r.postShares) : null;
     r.netDebtPre = (debt !== null && cash !== null) ? debt - cash : null;
     r.netDebtPost = (r.netDebtPre !== null && fresh !== null) ? r.netDebtPre - fresh : null;
     r.ev = (r.mcap !== null && r.netDebtPost !== null) ? r.mcap + r.netDebtPost : null;
@@ -723,11 +756,98 @@
   }
   document.getElementById('reset').addEventListener('click', function () {
     state.example = false; leaveExample(false);
-    try { localStorage.removeItem(STORE_KEY); } catch (e) {}
     document.getElementById('toast').textContent = 'Answers cleared.'; setTimeout(function(){ document.getElementById('toast').textContent=''; }, 2500);
   });
-  document.getElementById('clearExample').addEventListener('click', function () { leaveExample(false); });
-  ipoInput.addEventListener('input', function () { if (state.example) leaveExample(true); state.ipo = ipoInput.value; save(); });
+  ipoInput.addEventListener('input', function () {
+    if (state.example) leaveExample(true);
+    state.ipo = ipoInput.value; state.ipoId = ''; document.getElementById('ipoSelect').value = ''; document.getElementById('ipoInfo').hidden = true; save();
+  });
+
+  /* ---------- Curated IPO list (ipos.json next to this page) ---------- */
+  // No entries are embedded in the page. The list comes only from ipos.json next to it.
+  const EMBEDDED_LIST = { updated: '', ipos: [] };
+  let LIST = EMBEDDED_LIST;
+  const sel = document.getElementById('ipoSelect');
+
+  function labelFor(e) {
+    const st = e.status === 'example' ? 'example' : e.status === 'open' ? 'open now' : e.status === 'closed' ? 'closed' : e.open ? 'opens ' + e.open : 'upcoming';
+    return e.name + ' · ' + st;
+  }
+  function fillSelect() {
+    const groups = { open: [], upcoming: [], closed: [], example: [] };
+    LIST.ipos.forEach(function (e) { (groups[e.status] || groups.upcoming).push(e); });
+    let html = '<option value="">Choose an IPO, or type a name</option>';
+    [['open', 'Open now'], ['upcoming', 'Upcoming'], ['closed', 'Recently closed'], ['example', 'Worked example']].forEach(function (g) {
+      if (!groups[g[0]].length) return;
+      html += '<optgroup label="' + g[1] + '">' + groups[g[0]].map(function (e) { return '<option value="' + e.id + '">' + labelFor(e) + '</option>'; }).join('') + '</optgroup>';
+    });
+    sel.innerHTML = html;
+    if (state.ipoId) sel.value = state.ipoId;
+    if (state.ipoId && !sel.value) state.ipoId = '';
+  }
+  function showInfo(e) {
+    const box = document.getElementById('ipoInfo');
+    if (!e) { box.hidden = true; return; }
+    document.getElementById('infoName').textContent = e.name;
+    const a = document.getElementById('infoRhp');
+    if (e.rhp && e.rhp.url) { a.href = e.rhp.url; a.hidden = false; } else { a.hidden = true; }
+    const meta = [];
+    if (e.priceBand && e.priceBand.length) meta.push('Price band ₹' + e.priceBand.join('–' + '₹'));
+    if (e.lot) meta.push('lot ' + e.lot + ' shares');
+    if (e.open || e.close) meta.push('issue ' + (e.open || '?') + ' to ' + (e.close || '?'));
+    if (e.regulation) meta.push('Regulation ' + e.regulation + (e.regulation.indexOf('6(2)') === 0 ? ' (retail portion 10%)' : ''));
+    if (e.rhp && e.rhp.date) meta.push('RHP ' + e.rhp.date);
+    if (e.structural) {
+      const s = e.structural;
+      if (s.promoterPre !== undefined) meta.push('promoters ' + s.promoterPre + '% → ' + s.promoterPost + '% post-issue');
+      if (s.sellers) meta.push('sellers: ' + s.sellers);
+      if (s.pledge) meta.push('pledge: ' + s.pledge);
+    }
+    meta.push('compiled ' + (e.compiled || LIST.updated));
+    document.getElementById('infoMeta').textContent = meta.join(' · ');
+    const pg = e.pages || {};
+    document.getElementById('infoPages').innerHTML = Object.keys(pg).length
+      ? '<b>Where to look in the RHP:</b> ' + Object.keys(pg).map(function (k) { return k + ' <b>p.' + pg[k] + '</b>'; }).join(' · ') : '';
+    document.getElementById('infoNotes').innerHTML = (e.notes || []).map(function (n) { return '<li>' + n + '</li>'; }).join('');
+    box.hidden = false;
+  }
+  function applyEntry(id) {
+    const e = LIST.ipos.filter(function (x) { return x.id === id; })[0];
+    state.ipoId = id;
+    if (!e) { showInfo(null); save(); return; }
+    if (state.example) { state.example = false; banner.hidden = true; }
+    state.ipo = e.name; ipoInput.value = e.name;
+    state.calc = Object.assign({}, e.figures || {});
+    syncCalcInputs(); renderResults(); showInfo(e); save();
+    document.getElementById('calc').open = true;
+    document.getElementById('suggest').click();
+  }
+  sel.addEventListener('change', function () { applyEntry(sel.value); });
+
+  /* Document tools: web search from the typed name, and a remembered RHP link */
+  const docUrl = document.getElementById('docUrl'), docOpen = document.getElementById('docOpen'), searchWeb = document.getElementById('searchWeb');
+  function refreshDocTools() {
+    const name = (state.ipo || '').trim();
+    searchWeb.href = 'https://www.google.com/search?q=' + encodeURIComponent((name ? name + ' ' : '') + 'red herring prospectus RHP filetype:pdf');
+    searchWeb.textContent = name ? 'Search the web for “' + name + ' RHP”' : 'Search the web for the RHP';
+    const u = (state.docUrl || '').trim();
+    if (/^https?:\/\//i.test(u)) { docOpen.href = u; docOpen.hidden = false; } else { docOpen.hidden = true; }
+  }
+  docUrl.addEventListener('input', function () { if (state.example) { state.example = false; banner.hidden = true; } state.docUrl = docUrl.value; save(); refreshDocTools(); });
+  ipoInput.addEventListener('input', refreshDocTools);
+
+  function loadList() {
+    fillSelect();
+    if (location.protocol !== 'http:' && location.protocol !== 'https:') return;
+    fetch('ipos.json', { cache: 'no-cache' }).then(function (r) { return r.ok ? r.json() : null; }).then(function (j) {
+      if (!j || !Array.isArray(j.ipos)) return;
+      const ids = {}; j.ipos.forEach(function (e) { ids[e.id] = true; });
+      const merged = j.ipos.slice(); EMBEDDED_LIST.ipos.forEach(function (e) { if (!ids[e.id]) merged.push(e); });
+      LIST = { updated: j.updated || EMBEDDED_LIST.updated, ipos: merged };
+      fillSelect();
+      if (state.ipoId) { const e = LIST.ipos.filter(function (x) { return x.id === state.ipoId; })[0]; if (e) showInfo(e); }
+    }).catch(function () {});
+  }
 
   load();
   render();
@@ -736,5 +856,9 @@
   syncCalcInputs();
   renderResults();
   update();
+  loadList();
+  docUrl.value = state.docUrl || '';
+  refreshDocTools();
+  if (state.ipoId) { const e0 = LIST.ipos.filter(function (x) { return x.id === state.ipoId; })[0]; if (e0) showInfo(e0); }
 })();
 </script>
