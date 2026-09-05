@@ -168,7 +168,8 @@
   .q-where { margin: 6px 0 0; font-family: "IBM Plex Mono", monospace; font-size: 12.5px; color: var(--muted); }
   .q-where b { color: var(--ink); font-weight: 500; }
 
-  .answers { display: inline-flex; margin-top: 12px; border: 1px solid var(--rule); border-radius: 6px; overflow: hidden; background: var(--surface); }
+  .q-foot { display: flex; justify-content: flex-end; margin-top: 12px; }
+  .answers { display: inline-flex; border: 1px solid var(--rule); border-radius: 6px; overflow: hidden; background: var(--surface); }
   .answers label { position: relative; }
   .answers input { position: absolute; opacity: 0; inset: 0; margin: 0; }
   .answers span {
@@ -250,7 +251,7 @@
   .field input {
     font: inherit; font-family: "IBM Plex Mono", monospace; font-size: 14px; padding: 7px 10px;
     border: 1px solid var(--rule); border-radius: 5px; background: var(--ground); color: var(--ink);
-    font-variant-numeric: tabular-nums;
+    font-variant-numeric: tabular-nums; text-align: right;
   }
   .field input:focus { outline: 2px solid var(--focus); outline-offset: 1px; }
   .results { margin-top: 18px; display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 0 28px; }
@@ -265,8 +266,16 @@
 
   footer.note { border-top: 1px solid var(--rule); padding: 18px 0 40px; font-size: 13px; color: var(--muted); max-width: 72ch; }
 
+  .verdict-inline { margin-top: 28px; border: 1px solid var(--rule); border-radius: 8px; background: var(--surface); overflow: hidden; box-shadow: var(--shadow); }
+  .vi-head { display: flex; justify-content: space-between; align-items: baseline; padding: 12px 18px 10px; border-bottom: 1px solid var(--rule); }
+  .vi-head .v-count { margin-top: 0; }
+  .verdict-inline .outcome h2 { font-size: 28px; }
+  .verdict-inline .next { border-bottom: 0; }
+  .step2 { margin: 28px 0 10px; }
+  .step2 p { margin: 4px 0 0; font-size: 14.5px; color: var(--muted); max-width: 70ch; }
   @media (max-width: 880px) {
     main.grid { grid-template-columns: 1fr; }
+    .q-foot { justify-content: flex-start; }
     aside.verdict { position: static; order: -1; }
     .top h1 { font-size: 26px; }
   }
@@ -284,7 +293,7 @@
       <div>
         <span class="eyebrow">Companion to “The IPO Question Nobody Asks”</span>
         <h1>IPO Owner's Test</h1>
-        <p class="lede">Twenty-one questions from the OWNERS framework. Answer each from the red herring prospectus, not from memory. Five are gates: a “No” on any of them ends the test. A “Don't know” anywhere sends you back to the document.</p>
+        <p class="lede">Step one: twenty-one questions from the OWNERS framework, answered from the red herring prospectus, not from memory. Five are gates: a “No” on any of them ends the test, and a “Don't know” sends you back to the document. Step two: the numbers, which the verdict requires before it will say “Ready to decide”.</p>
       </div>
       <div class="ipo-name">
         <label class="eyebrow" for="ipo">IPO under review</label>
@@ -315,10 +324,25 @@
 
 <main class="wrap grid">
   <div>
-    <details class="calc" id="calc" open>
+    <section id="form" aria-label="Questions"></section>
+    <div class="verdict-inline" id="verdictInline" aria-live="polite">
+      <div class="vi-head"><span class="eyebrow">Step one result</span><span class="v-count" id="answered2"></span></div>
+      <div class="outcome" id="outcome2" data-state="none">
+        <span class="eyebrow" id="outcomeLabel2">Outcome</span>
+        <h2 id="outcomeTitle2">Not enough answers yet</h2>
+        <p id="outcomeText2"></p>
+      </div>
+      <div class="next">
+        <span class="eyebrow" id="nextLabel2">Read next</span>
+        <ul id="nextList2"></ul>
+        <p class="empty" id="nextEmpty2">Nothing outstanding.</p>
+      </div>
+    </div>
+    <div class="step2"><span class="eyebrow">Step two</span><p>Answered the questions? Now test them against the numbers. Enter the figures from the RHP and the page computes market capitalisation, P/E, EV/EBITDA, cash conversion and leverage, and checks them against what you answered.</p></div>
+    <details class="calc" id="calc">
       <summary>
         <span class="block-letter">₹</span>
-        <div><h2>Run the numbers</h2><span class="eyebrow">Optional · type figures from the RHP in ₹ crore · the page computes the ratios and suggests answers for questions 5, 6, 9, 10, 12 and 19</span></div>
+        <div><h2>Deeper analysis: run the numbers</h2><span class="eyebrow">Step two, after the questions · type figures from the RHP in ₹ crore · required before the verdict will say “Ready to decide”</span></div>
         <span class="chev" aria-hidden="true"></span>
       </summary>
       <div class="calc-body">
@@ -333,7 +357,6 @@
         </div>
       </div>
     </details>
-    <section id="form" aria-label="Questions"></section>
   </div>
 
   <aside class="verdict" aria-live="polite">
@@ -476,9 +499,9 @@
           '<p class="q-text">' + q.text + (q.gate ? '<span class="gate-tag">Gate</span>' : '') + '</p>' +
           '<p class="q-why">' + q.why + '</p>' +
           '<p class="q-where">Where to look: <b>' + q.where + '</b></p>' +
-          '<div class="answers" role="radiogroup" aria-label="Question ' + (i+1) + '">' +
+          '<div class="q-foot"><div class="answers" role="radiogroup" aria-label="Question ' + (i+1) + '">' +
             opt(i, 'yes', 'Yes') + opt(i, 'no', 'No') + opt(i, 'dk', 'Don’t know') +
-          '</div></div></div>';
+          '</div></div></div></div>';
       });
       html += '</div>';
     });
@@ -561,7 +584,7 @@
     const k = e.target.dataset.k; if (!k) return;
     if (state.example) { state.example = false; banner.hidden = true; }
     const v = e.target.value; state.calc[k] = v === '' ? null : Number(v);
-    save(); renderResults();
+    save(); renderResults(); update();
   });
 
   function num(k) { const v = state.calc[k]; return (v === null || v === undefined || v === '' || isNaN(v)) ? null : Number(v); }
@@ -669,7 +692,7 @@
   });
   document.getElementById('clearCalc').addEventListener('click', function () {
     if (state.example) { state.example = false; banner.hidden = true; }
-    state.calc = {}; syncCalcInputs(); save(); renderResults();
+    state.calc = {}; syncCalcInputs(); save(); renderResults(); update();
   });
 
   function evaluate() {
@@ -681,6 +704,9 @@
     const dks = a.map(function (v, i) { return v === 'dk' ? i : -1; }).filter(function (i) { return i >= 0; });
     const nonGateNo = a.map(function (v, i) { return (v === 'no' && !Q[i].gate) ? i : -1; }).filter(function (i) { return i >= 0; });
     const complete = answered === Q.length;
+    const c = compute();
+    const NEED = [['price', 'Upper end of the price band'], ['preShares', 'Shares outstanding before the issue'], ['fresh', 'Fresh issue size (or number of new shares)'], ['pat', 'Profit after tax'], ['ocf3', 'Operating cash flow, three years'], ['pat3', 'Profit after tax, three years']];
+    const missing = NEED.filter(function (k) { if (k[0] === 'fresh') return num('fresh') === null && num('freshShares') === null; return num(k[0]) === null; });
 
     let st, title, text, next = [], nextLabel = 'Read next';
     if (answered === 0) {
@@ -700,6 +726,11 @@
       text = 'No gate has failed, but three or more weaknesses are stacking up. Decide whether they are explained and priced in, or whether together they amount to a reason to pass.';
       nextLabel = 'Weaknesses to resolve';
       next = nonGateNo.map(function (i) { return { n: i + 1, t: Q[i].where, s: shortText(i) }; });
+    } else if (complete && missing.length) {
+      st = 'investigate'; title = 'Run the numbers';
+      text = 'Every gate is open and nothing is unknown. Before you decide, open “Deeper analysis” below the questions and enter at least the figures listed here. The page then checks valuation and cash conversion against your answers.';
+      nextLabel = 'Figures still needed';
+      next = missing.map(function (k) { return { href: '#calc', t: 'Deeper analysis: run the numbers', s: k[1] }; });
     } else {
       st = 'ready'; title = complete ? 'Ready to decide' : 'On track, keep going';
       text = complete
@@ -734,8 +765,19 @@
 
     document.getElementById('nextLabel').textContent = r.nextLabel;
     const nl = document.getElementById('nextList');
-    nl.innerHTML = r.next.map(function (x) { return '<li><a href="#q' + x.n + '" style="color:inherit;text-decoration:none">' + x.s + '</a><br><b>' + x.t + '</b></li>'; }).join('');
+    nl.innerHTML = r.next.map(function (x) { return '<li><a href="' + (x.href || ('#q' + x.n)) + '" style="color:inherit;text-decoration:none">' + x.s + '</a><br><b>' + x.t + '</b></li>'; }).join('');
     document.getElementById('nextEmpty').hidden = r.next.length > 0;
+
+    // inline copy after the last question
+    document.getElementById('answered2').textContent = r.answered + ' of ' + Q.length + ' answered · gates ' + r.gateYes + '/' + r.gates.length + ' open';
+    const out2 = document.getElementById('outcome2');
+    out2.dataset.state = r.st;
+    document.getElementById('outcomeLabel2').textContent = (r.st === 'none' || r.complete) ? 'Outcome' : 'Provisional outcome';
+    document.getElementById('outcomeTitle2').textContent = r.title;
+    document.getElementById('outcomeText2').textContent = r.text;
+    document.getElementById('nextLabel2').textContent = r.nextLabel;
+    document.getElementById('nextList2').innerHTML = nl.innerHTML;
+    document.getElementById('nextEmpty2').hidden = r.next.length > 0;
   }
 
   function summary() {
@@ -770,6 +812,7 @@
     try { document.execCommand('copy'); done(); } catch (e) { document.getElementById('toast').textContent = 'Copy blocked by the browser. Select the answers and copy manually.'; }
     document.body.removeChild(ta);
   }
+  ['nextList', 'nextList2'].forEach(function (id) { document.getElementById(id).addEventListener('click', function (e) { const a = e.target.closest('a'); if (a && a.getAttribute('href') === '#calc') document.getElementById('calc').open = true; }); });
   document.getElementById('reset').addEventListener('click', function () {
     state.example = false; leaveExample(false);
     document.getElementById('toast').textContent = 'Answers cleared.'; setTimeout(function(){ document.getElementById('toast').textContent=''; }, 2500);
